@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>430</height>
+    <height>472</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>500</width>
-    <height>430</height>
+    <height>472</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>500</width>
-    <height>430</height>
+    <height>472</height>
    </size>
   </property>
   <property name="font">
@@ -59,6 +59,14 @@ color: rgb(97, 99, 99);
 	color: rgb(168, 0, 16);
 	background-color: rgb(255, 255, 255);
 	border: none;
+}
+.QPushButton{
+	background-color: transparent;
+	color: rgb(250, 255, 255);
+	border:none;
+}
+.QPushButton:hover{
+	background-color: rgba(168, 0, 16,50);
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -197,12 +205,56 @@ color: rgb(97, 99, 99);
      <string>Iniciar Sesión</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="bNuevo">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>390</y>
+      <width>141</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string>Nuevo Usuario</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bRecordar">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>390</y>
+      <width>141</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string>Olvide mi contraseña</string>
+    </property>
+   </widget>
    <zorder>label_usuario</zorder>
    <zorder>line_usuario</zorder>
    <zorder>line_contrasena</zorder>
    <zorder>label_contrasena</zorder>
    <zorder>label_login</zorder>
    <zorder>button_iniciar</zorder>
+   <zorder>bNuevo</zorder>
+   <zorder>bRecordar</zorder>
   </widget>
  </widget>
  <resources/>
