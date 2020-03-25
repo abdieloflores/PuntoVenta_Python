@@ -239,6 +239,16 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="widgetZone" native="true">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>0</y>
+      <width>551</width>
+      <height>601</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

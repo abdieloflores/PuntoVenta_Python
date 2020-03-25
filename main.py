@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-from PyQt5 import QtWidgets,uic
 import pymysql
+import datetime
+from PyQt5 import QtWidgets,uic
 
 #Licencias Base de Datos
 _host='localhost'
@@ -61,6 +62,12 @@ class VentanaPrincipal(QtWidgets.QMainWindow):
         super(VentanaPrincipal,self).__init__(parent)
         uic.loadUi('mainWindow.ui',self)
         self.bSalir.clicked.connect(self.cerrar)
+        self.bVender.clicked.connect(self.abrirVender)
+
+    def abrirVender(self):
+        self.wVender = vender(self)
+        self.wVender.move(150,0)
+        self.wVender.show()
 
     def cerrar(self):
         self.parent().show()
@@ -82,16 +89,24 @@ class nuevoUsuario(QtWidgets.QMainWindow):
             conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
             try:
                 with conexion.cursor() as cursor:
-                    sentencia = "INSERT INTO Vendedores (v_Usuario,v_Contrasena,v_Nombre) VALUES(%s,%s,%s)" % (a,b,c)
-                    cursor.execute(sentencia)
-                conexion.commit()
+                    cursor.execute("SELECT v_Usuario FROM Vendedores WHERE v_Usuario='%s'" % (a))
+                    vendedores = cursor.fetchall()
+                    if len(vendedores)==0:
+                        insertar = (
+                        "INSERT INTO Vendedores (v_Usuario,v_Contrasena,v_Nombre)"
+                        "VALUES(%s,%s,%s)"
+                        )
+                        datos = (a,b,c)
+                        cursor.execute(insertar,datos)
+                        conexion.commit()
+                        self.label_titulo.setText("Agregado con Éxito")
+                        self.cerrar()
+                    else:
+                        self.label_titulo.setText("Error: Ya existe el usuario")
             finally:
                 conexion.close()
         except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
             print("Ocurrió un error al conectar: ", e)
-        
-        self.parent().show()
-        self.close()
     
     def cerrar(self):
         self.parent().show()
@@ -111,22 +126,36 @@ class consultaContrasena(QtWidgets.QMainWindow):
             conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
             try:
                 with conexion.cursor() as cursor:
-                    sentencia = "SELECT v_Usuario,v_Contrasena FROM Vendedores WHERE v_Usuario='%s'" % (a)
+                    sentencia = "SELECT v_Contrasena FROM Vendedores WHERE v_Usuario='%s'" % (a)
                     cursor.execute(sentencia)
-                    vendedores = cursor.fetchall()
+                    vendedores = cursor.fetchall() 
             finally:
                 conexion.close()
         except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
             print("Ocurrió un error al conectar: ", e)
-
-        contrasena = vendedores[1]
-        self.label_contrasena.setText(contrasena)
+        
+        if len(vendedores)==0:
+            self.label_contrasena.setText("No existe el usuario")
+        else:
+            contrasena = vendedores[0][0]
+            self.label_contrasena.setText(contrasena)
 
     def cerrar(self):
         self.parent().show()
         self.close()
 
-
+class vender(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(vender,self).__init__(parent)
+        uic.loadUi('vender.ui',self)
+        fecha = str(datetime.date.today())
+        self.line_fecha.setText(fecha)
+        conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+        cursor = conexion.cursor()
+        sentencia = "SELECT v_Contrasena FROM Vendedores WHERE v_Usuario='%s'" % (a)
+        cursor.execute(sentencia)
+        vendedores = cursor.fetchall() 
+        conexion.close()
 
 app = QtWidgets.QApplication(sys.argv)
 window = Login()
