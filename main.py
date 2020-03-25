@@ -13,7 +13,7 @@ _db='PuntoVenta'
 class Login(QtWidgets.QMainWindow):
     def __init__(self):
         super(Login,self).__init__()
-        uic.loadUi('login.ui',self)
+        uic.loadUi('UI/login.ui',self)
         self.show()
         self.button_iniciar.clicked.connect(self.clicIniciar)
         self.bNuevo.clicked.connect(self.abrirNuevo)
@@ -60,7 +60,7 @@ class Login(QtWidgets.QMainWindow):
 class VentanaPrincipal(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(VentanaPrincipal,self).__init__(parent)
-        uic.loadUi('mainWindow.ui',self)
+        uic.loadUi('UI/mainWindow.ui',self)
         self.bSalir.clicked.connect(self.cerrar)
         self.bVender.clicked.connect(self.abrirVender)
 
@@ -76,7 +76,7 @@ class VentanaPrincipal(QtWidgets.QMainWindow):
 class nuevoUsuario(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(nuevoUsuario,self).__init__(parent)
-        uic.loadUi('newUsuario.ui',self)
+        uic.loadUi('UI/newUsuario.ui',self)
         self.bGuardar.clicked.connect(self.guardar)
         self.bSalir.clicked.connect(self.cerrar)
 
@@ -115,7 +115,7 @@ class nuevoUsuario(QtWidgets.QMainWindow):
 class consultaContrasena(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(consultaContrasena,self).__init__(parent)
-        uic.loadUi('contrasena.ui',self)
+        uic.loadUi('UI/contrasena.ui',self)
         self.bContra.clicked.connect(self.consultar)
         self.bSalir.clicked.connect(self.cerrar)
 
@@ -147,15 +147,38 @@ class consultaContrasena(QtWidgets.QMainWindow):
 class vender(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(vender,self).__init__(parent)
-        uic.loadUi('vender.ui',self)
+        uic.loadUi('UI/vender.ui',self)
         fecha = str(datetime.date.today())
         self.line_fecha.setText(fecha)
-        conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
-        cursor = conexion.cursor()
-        sentencia = "SELECT v_Contrasena FROM Vendedores WHERE v_Usuario='%s'" % (a)
-        cursor.execute(sentencia)
-        vendedores = cursor.fetchall() 
-        conexion.close()
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT note_Id FROM Notas")
+                    notas = cursor.fetchall()
+                    cursor.execute("SELECT * FROM Clientes")
+                    clientes = cursor.fetchall()
+                    cursor.execute("SELECT * FROM Productos")
+                    productos = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        if len(notas)==0:
+            self.line_folio.setText("1")
+        else:
+            num = str(notas[-1][0]+1)
+            self.line_folio.setText(num)
+
+        nombres = []
+        prods = []
+        for i in range(len(clientes)):
+            nombres.append(clientes[i][2])
+        for i in range(len(productos)):
+            prods.append(productos[i][2])
+        self.comboBox_cliente.addItems(nombres)
+        self.comboBox_producto.addItems(prods)
+
 
 app = QtWidgets.QApplication(sys.argv)
 window = Login()
