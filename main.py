@@ -66,7 +66,7 @@ class VentanaPrincipal(QtWidgets.QMainWindow):
 
     def abrirVender(self):
         self.wVender = vender(self)
-        self.wVender.move(150,0)
+        self.wVender.move(150,40)
         self.wVender.show()
 
     def cerrar(self):
