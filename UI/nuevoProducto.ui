@@ -7,23 +7,23 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>400</height>
+    <height>650</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>400</width>
-    <height>400</height>
+    <height>650</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>400</width>
-    <height>400</height>
+    <height>650</height>
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Nuevo Producto</string>
   </property>
   <property name="styleSheet">
    <string notr="true">#newUsuario{
@@ -33,7 +33,8 @@ background-color: rgb(49, 50, 50);
 	color: rgb(255, 255, 255);
 }
 .QLineEdit{
-color: rgb(97, 99, 99);
+	color: rgb(97, 99, 99);
+	border:none;
 }
 .QPushButton{
 	color: rgb(250, 255, 255);
@@ -44,6 +45,9 @@ color: rgb(97, 99, 99);
 	color: rgb(255,255,255);
 	background-color: rgb(30,30,30);
 	border: none;
+}
+.QComboBox{
+	border-radius:none;
 }</string>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -63,13 +67,13 @@ color: rgb(97, 99, 99);
      </font>
     </property>
     <property name="text">
-     <string>Nuevo Usuario</string>
+     <string>Nuevo Producto</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="label_nombre">
+   <widget class="QLabel" name="label_Cbarras">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -84,10 +88,10 @@ color: rgb(97, 99, 99);
      </font>
     </property>
     <property name="text">
-     <string>Nombre Completo</string>
+     <string>Codigo de barras</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="line_nombre">
+   <widget class="QLineEdit" name="line_Cbarras">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -102,7 +106,7 @@ color: rgb(97, 99, 99);
      </font>
     </property>
    </widget>
-   <widget class="QLineEdit" name="line_usuario">
+   <widget class="QLineEdit" name="line_nombre">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -117,7 +121,7 @@ color: rgb(97, 99, 99);
      </font>
     </property>
    </widget>
-   <widget class="QLabel" name="label_usuario">
+   <widget class="QLabel" name="label_nombre">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -132,15 +136,15 @@ color: rgb(97, 99, 99);
      </font>
     </property>
     <property name="text">
-     <string>Usuario</string>
+     <string>Nombre</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="line_contrasena">
+   <widget class="QLineEdit" name="line_stockmin">
     <property name="geometry">
      <rect>
       <x>50</x>
       <y>280</y>
-      <width>300</width>
+      <width>140</width>
       <height>41</height>
      </rect>
     </property>
@@ -149,8 +153,11 @@ color: rgb(97, 99, 99);
       <family>Avenir</family>
      </font>
     </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
-   <widget class="QLabel" name="label_contrasena">
+   <widget class="QLabel" name="label_stockmin">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -165,14 +172,14 @@ color: rgb(97, 99, 99);
      </font>
     </property>
     <property name="text">
-     <string>Contraseña</string>
+     <string>Stock Minimo</string>
     </property>
    </widget>
    <widget class="QPushButton" name="bGuardar">
     <property name="geometry">
      <rect>
       <x>240</x>
-      <y>340</y>
+      <y>590</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -198,7 +205,7 @@ color: rgb(97, 99, 99);
     <property name="geometry">
      <rect>
       <x>120</x>
-      <y>340</y>
+      <y>590</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -218,6 +225,164 @@ color: rgb(97, 99, 99);
       <width>20</width>
       <height>16</height>
      </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_stockmax">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>260</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Stock Máximo</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="label_stockmax_2">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>280</y>
+      <width>140</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>S</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_costo">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>360</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_costo">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>340</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Costo con IVA</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_precio">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>360</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_precio">
+    <property name="geometry">
+     <rect>
+      <x>210</x>
+      <y>340</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Precio con IVA</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_proveedor">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>440</y>
+      <width>300</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_proveedor">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>420</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Proveedor</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_almacen">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>500</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Almacen</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_almacen">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>520</y>
+      <width>300</width>
+      <height>41</height>
+     </rect>
     </property>
    </widget>
   </widget>

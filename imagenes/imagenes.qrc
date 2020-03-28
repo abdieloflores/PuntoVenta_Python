@@ -1,0 +1,25 @@
+<RCC>
+  <qresource prefix="Backgrounds">
+    <file>FondoMenu.png</file>
+    <file>FondoLogin.png</file>
+  </qresource>
+  <qresource prefix="Iconos">
+    <file>Recuperar.png</file>
+    <file>Eliminar.png</file>
+    <file>Editar.png</file>
+    <file>Nuevo.png</file>
+    <file>Guardar.png</file>
+    <file>Almacenes.png</file>
+    <file>Clientes.png</file>
+    <file>Entradas.png</file>
+    <file>Reportes.png</file>
+    <file>Salidas.png</file>
+    <file>Productos.png</file>
+    <file>Salir.png</file>
+    <file>Vender.png</file>
+  </qresource>
+  <qresource prefix="Img">
+    <file>Store-Soft.png</file>
+    <file>Logo.png</file>
+  </qresource>
+</RCC>

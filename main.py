@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import pymysql
+import imagenes.imagenes
 import datetime
 from PyQt5 import QtWidgets,uic
 
@@ -46,14 +47,14 @@ class Login(QtWidgets.QMainWindow):
     def abrirNuevo(self):
         self.line_usuario.clear()
         self.line_contrasena.clear()  
-        self.hide()
+        self.close()
         nuevo=nuevoUsuario(self)
         nuevo.show()
 
     def abrirRecordar(self):
         self.line_usuario.clear()
         self.line_contrasena.clear()  
-        self.hide()
+        self.close()
         nuevo=consultaContrasena(self)
         nuevo.show()   
 
@@ -61,15 +62,31 @@ class VentanaPrincipal(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(VentanaPrincipal,self).__init__(parent)
         uic.loadUi('UI/mainWindow.ui',self)
+        
+        self.wVender = vender(self.body)
+        self.wProductos = productos(self.body)
+
+        self.refreshBody()
+
         self.bSalir.clicked.connect(self.cerrar)
         self.bVender.clicked.connect(self.abrirVender)
+        self.bProductos.clicked.connect(self.abrirProductos)
 
     def abrirVender(self):
-        self.wVender = vender(self)
-        self.wVender.move(150,40)
+        self.refreshBody()
         self.wVender.show()
+        
+    def abrirProductos(self):
+        self.refreshBody()
+        self.wProductos.show()
+
+    def refreshBody(self):
+        self.wProductos.close()
+        self.wVender.close()
 
     def cerrar(self):
+        self.wProductos.close()
+        self.wVender.close()
         self.parent().show()
         self.close()
 
@@ -148,6 +165,8 @@ class vender(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(vender,self).__init__(parent)
         uic.loadUi('UI/vender.ui',self)
+        self.bSalir.clicked.connect(self.cerrar)
+
         fecha = str(datetime.date.today())
         self.line_fecha.setText(fecha)
         try:
@@ -178,6 +197,18 @@ class vender(QtWidgets.QWidget):
             prods.append(productos[i][2])
         self.comboBox_cliente.addItems(nombres)
         self.comboBox_producto.addItems(prods)
+
+    def cerrar(self):
+        self.close() 
+
+class productos(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(productos,self).__init__(parent)
+        uic.loadUi('UI/productos.ui',self)
+        self.bSalir.clicked.connect(self.cerrar)
+    
+    def cerrar(self):
+        self.close()
 
 
 app = QtWidgets.QApplication(sys.argv)

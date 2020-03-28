@@ -7,8 +7,20 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>400</height>
+    <height>250</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>250</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>400</width>
+    <height>250</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -29,8 +41,7 @@ color: rgb(97, 99, 99);
 	border: none;
 }
 .QPushButton:hover{
-	color: rgb(168, 0, 16);
-	background-color: rgb(255, 255, 255);
+	background-color: rgb(30,30,30);
 	border: none;
 }</string>
   </property>
@@ -51,7 +62,7 @@ color: rgb(97, 99, 99);
      </font>
     </property>
     <property name="text">
-     <string>Consulta de Contrasena</string>
+     <string>Recupera tu contraseña</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -61,7 +72,7 @@ color: rgb(97, 99, 99);
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>120</y>
+      <y>80</y>
       <width>300</width>
       <height>41</height>
      </rect>
@@ -76,8 +87,8 @@ color: rgb(97, 99, 99);
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>90</y>
-      <width>131</width>
+      <y>60</y>
+      <width>301</width>
       <height>21</height>
      </rect>
     </property>
@@ -87,40 +98,66 @@ color: rgb(97, 99, 99);
      </font>
     </property>
     <property name="text">
-     <string>Usuario</string>
+     <string>Usuario:</string>
     </property>
    </widget>
    <widget class="QPushButton" name="bContra">
     <property name="geometry">
      <rect>
-      <x>212</x>
-      <y>170</y>
-      <width>141</width>
+      <x>172</x>
+      <y>130</y>
+      <width>181</width>
       <height>32</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="text">
      <string>Obtener contraseña</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../imagenes/imagenes.qrc">
+      <normaloff>:/Iconos/Recuperar.png</normaloff>:/Iconos/Recuperar.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>16</height>
+     </size>
     </property>
    </widget>
    <widget class="QPushButton" name="bSalir">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>170</y>
-      <width>141</width>
+      <y>130</y>
+      <width>101</width>
       <height>32</height>
      </rect>
     </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
     <property name="text">
      <string>Salir</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../imagenes/imagenes.qrc">
+      <normaloff>:/Iconos/Salir.png</normaloff>:/Iconos/Salir.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>16</height>
+     </size>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>280</y>
+      <y>170</y>
       <width>400</width>
       <height>31</height>
      </rect>
@@ -141,9 +178,9 @@ color: rgb(97, 99, 99);
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>310</y>
+      <y>200</y>
       <width>400</width>
-      <height>51</height>
+      <height>41</height>
      </rect>
     </property>
     <property name="font">
@@ -152,6 +189,9 @@ color: rgb(97, 99, 99);
       <pointsize>24</pointsize>
      </font>
     </property>
+    <property name="cursor">
+     <cursorShape>IBeamCursor</cursorShape>
+    </property>
     <property name="text">
      <string/>
     </property>
@@ -159,8 +199,17 @@ color: rgb(97, 99, 99);
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
+   <zorder>label_titulo</zorder>
+   <zorder>line_usuario</zorder>
+   <zorder>label_usuario</zorder>
+   <zorder>bContra</zorder>
+   <zorder>bSalir</zorder>
+   <zorder>label_contrasena</zorder>
+   <zorder>label</zorder>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../imagenes/imagenes.qrc"/>
+ </resources>
  <connections/>
 </ui>
