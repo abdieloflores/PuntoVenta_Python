@@ -1,4 +1,4 @@
-import random
+"""import random
 def unico(x,L):
   esUnico=True
   for i in range(len(L)):
@@ -18,4 +18,18 @@ while j<100:
     else:
         print(j,".- "," Suma = ",suma)
     L.append(x)
-    j+=1
+    j+=1"""
+
+class Person:
+  def __init__(self,nombre,edad):
+    self.nombre = nombre
+    self.edad = edad
+
+  def imprimir(self):
+    print("Nombre: ",self.nombre," - Edad: ",self.edad)
+
+class Empleado(Person):
+  def __init__(self,trabajo):
+    super(Empleado,self).__init__(self)
+    
+

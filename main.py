@@ -56,39 +56,7 @@ class Login(QtWidgets.QMainWindow):
         self.line_contrasena.clear()  
         self.close()
         nuevo=consultaContrasena(self)
-        nuevo.show()   
-
-class VentanaPrincipal(QtWidgets.QMainWindow):
-    def __init__(self,parent=None):
-        super(VentanaPrincipal,self).__init__(parent)
-        uic.loadUi('UI/mainWindow.ui',self)
-        
-        self.wVender = vender(self.body)
-        self.wProductos = productos(self.body)
-
-        self.refreshBody()
-
-        self.bSalir.clicked.connect(self.cerrar)
-        self.bVender.clicked.connect(self.abrirVender)
-        self.bProductos.clicked.connect(self.abrirProductos)
-
-    def abrirVender(self):
-        self.refreshBody()
-        self.wVender.show()
-        
-    def abrirProductos(self):
-        self.refreshBody()
-        self.wProductos.show()
-
-    def refreshBody(self):
-        self.wProductos.close()
-        self.wVender.close()
-
-    def cerrar(self):
-        self.wProductos.close()
-        self.wVender.close()
-        self.parent().show()
-        self.close()
+        nuevo.show() 
 
 class nuevoUsuario(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
@@ -159,6 +127,73 @@ class consultaContrasena(QtWidgets.QMainWindow):
 
     def cerrar(self):
         self.parent().show()
+        self.close()  
+
+class VentanaPrincipal(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(VentanaPrincipal,self).__init__(parent)
+        uic.loadUi('UI/mainWindow.ui',self)
+        
+        self.wVender = vender(self.body)
+        self.wProductos = productos(self.body)
+        self.wClientes = clientes(self.body)
+        self.wAlmacenes = almacenes(self.body)
+        self.wSalidas = salidas(self.body)
+        self.wEntradas = entradas(self.body)
+        self.wReportes = reportes(self.body)
+
+        self.refreshBody()
+
+        self.bSalir.clicked.connect(self.cerrar)
+        self.bVender.clicked.connect(self.abrirVender)
+        self.bProductos.clicked.connect(self.abrirProductos)
+        self.bClientes.clicked.connect(self.abrirClientes)
+        self.bAlmacenes.clicked.connect(self.abrirAlmacenes)
+        self.bSalidas.clicked.connect(self.abrirSalidas)
+        self.bEntradas.clicked.connect(self.abrirEntradas)
+        self.bReportes.clicked.connect(self.abrirReportes)
+
+    def abrirVender(self):
+        self.refreshBody()
+        self.wVender.show()
+        
+    def abrirProductos(self):
+        self.refreshBody()
+        self.wProductos.show()
+    
+    def abrirClientes(self):
+        self.refreshBody()
+        self.wClientes.show()
+    
+    def abrirAlmacenes(self):
+        self.refreshBody()
+        self.wAlmacenes.show()
+    
+    def abrirSalidas(self):
+        self.refreshBody()
+        self.wSalidas.show()
+    
+    def abrirEntradas(self):
+        self.refreshBody()
+        self.wEntradas.show()
+
+    def abrirReportes(self):
+        self.refreshBody()
+        self.wReportes.show()
+
+    def refreshBody(self):
+        self.wProductos.close()
+        self.wVender.close()
+        self.wClientes.close()
+        self.wAlmacenes.close()
+        self.wSalidas.close()
+        self.wEntradas.close()
+        self.wReportes.close()
+
+    def cerrar(self):
+        self.wProductos.close()
+        self.wVender.close()
+        self.parent().show()
         self.close()
 
 class vender(QtWidgets.QWidget):
@@ -205,6 +240,188 @@ class productos(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(productos,self).__init__(parent)
         uic.loadUi('UI/productos.ui',self)
+        self.bSalir.clicked.connect(self.cerrar)
+    
+    def cerrar(self):
+        self.close()
+
+class clientes(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(clientes,self).__init__(parent)
+        uic.loadUi('UI/clientes.ui',self)
+        self.bSalir.clicked.connect(self.cerrar)
+    
+    def cerrar(self):
+        self.close()
+
+class almacenes(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(almacenes,self).__init__(parent)
+        uic.loadUi('UI/almacenes.ui',self)
+
+        self.cuadroMensaje = QtWidgets.QMessageBox()
+
+        self.bNuevo.clicked.connect(self.nuevo)
+        self.bEditar.clicked.connect(self.editar)
+        self.bEliminar.clicked.connect(self.eliminar)
+        self.bActualizar.clicked.connect(self.actualizar)
+        
+        self.almacenes,self.filas = self.consultarTodo()
+        self.crearTabla(self.filas,2,self.almacenes)
+    
+    def crearTabla(self,filas,columnas,datos):
+        self.table_almacenes.setRowCount(filas)
+        self.table_almacenes.setColumnCount(columnas)
+        self.table_almacenes.setHorizontalHeaderLabels(["ID","NOMBRE"])
+        self.header = self.table_almacenes.horizontalHeader()
+        self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        
+        for i in range (0,self.filas):
+            for j in range (0,2):
+                self.table_almacenes.setItem(i, j, QtWidgets.QTableWidgetItem(str(datos[i][j])))
+    
+    def consultarTodo(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    sentencia = "SELECT * FROM Almacenes"
+                    cursor.execute(sentencia)
+                    almacenes = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        
+        return almacenes,len(almacenes)
+    
+    def nuevo(self):
+        almacen=nuevoAlmacen(self)
+        almacen.show()
+    
+    def editar(self):
+        if self.table_almacenes.currentRow() >= 0:
+            fila = self.table_almacenes.currentRow()
+            num = self.almacenes[fila][0]
+            nombre = self.almacenes[fila][1]
+            update = updateAlmacen(self)
+            update.setInfo(num,nombre)
+            update.show()
+    
+    def eliminar(self):
+        if self.table_almacenes.currentRow() >= 0:
+            fila = self.table_almacenes.currentRow()
+            num = self.almacenes[fila][0]
+            try:
+                conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+                try:
+                    with conexion.cursor() as cursor:    
+                        cursor.execute("DELETE FROM Almacenes WHERE alma_Id = '%s' " % (num))
+                    conexion.commit()
+                finally:
+                    conexion.close()
+            except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+                print("Ocurrió un error al conectar: ", e)
+
+    def actualizar(self):
+        self.almacenes,self.filas = self.consultarTodo()
+        self.crearTabla(self.filas,2,self.almacenes)
+
+class nuevoAlmacen(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(nuevoAlmacen,self).__init__(parent)
+        uic.loadUi('UI/nuevoAlmacen.ui',self)
+        self.bGuardar.clicked.connect(self.guardar)
+        self.bSalir.clicked.connect(self.cerrar)
+
+    def guardar(self):
+        a = self.line_nombre.text()
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT alma_Nombre FROM Almacenes WHERE alma_Nombre='%s'" % (a))
+                    almacenes = cursor.fetchall()
+                    if len(almacenes)==0:
+                        cursor.execute("INSERT INTO Almacenes (alma_Nombre) VALUES ('%s')" % (a))
+                        conexion.commit()
+                    else:
+                        pass
+            finally:
+                conexion.close()
+                self.cerrar()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+    
+    def cerrar(self):
+        self.close()
+
+class updateAlmacen(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(updateAlmacen,self).__init__(parent)
+        uic.loadUi('UI/updateAlmacen.ui',self)
+        self.num = None
+        self.nombre = None
+
+        self.bGuardar.clicked.connect(self.guardar)
+        self.bSalir.clicked.connect(self.cerrar)
+
+    def setInfo(self,num, nombre):
+        self.num = num
+        self.nombre = nombre
+        self.line_id.setText(str(self.num))
+        self.line_nombre.setText(self.nombre)
+    
+    def getInfo(self):
+        return self.num,self.nombre
+
+    def guardar(self):
+        num,nombre = self.getInfo()
+        if num >= 0:
+            nuevoNombre = self.line_nombre.text()
+            try:
+                conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+                try:
+                    with conexion.cursor() as cursor:
+                        cursor.execute("SELECT alma_Nombre FROM Almacenes WHERE alma_Nombre='%s'" % (nuevoNombre))
+                        almacenes = cursor.fetchall()
+                        if len(almacenes)==0:
+                            cursor.execute("UPDATE Almacenes SET alma_Nombre = '%s' WHERE ( alma_Id = '%s')" % (nuevoNombre,num))
+                            conexion.commit()
+                            self.cerrar()
+                        else:
+                            self.line_nombre.setText(nombre)
+                finally:
+                    conexion.close()
+            except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+                print("Ocurrió un error al conectar: ", e)
+
+    def cerrar(self):
+        self.close()
+
+class salidas(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(salidas,self).__init__(parent)
+        uic.loadUi('UI/salidas.ui',self)
+        self.bSalir.clicked.connect(self.cerrar)
+    
+    def cerrar(self):
+        self.close()
+
+class entradas(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(entradas,self).__init__(parent)
+        uic.loadUi('UI/entradas.ui',self)
+        self.bSalir.clicked.connect(self.cerrar)
+    
+    def cerrar(self):
+        self.close()
+
+class reportes(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(reportes,self).__init__(parent)
+        uic.loadUi('UI/reportes.ui',self)
         self.bSalir.clicked.connect(self.cerrar)
     
     def cerrar(self):

@@ -4,6 +4,8 @@
     <file>FondoLogin.png</file>
   </qresource>
   <qresource prefix="Iconos">
+    <file>Update.png</file>
+    <file>LogoIco.png</file>
     <file>Recuperar.png</file>
     <file>Eliminar.png</file>
     <file>Editar.png</file>
