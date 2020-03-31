@@ -81,6 +81,9 @@
    </property>
   </widget>
   <widget class="QLabel" name="label_titulo">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -92,11 +95,13 @@
    <property name="font">
     <font>
      <family>Avenir</family>
-     <pointsize>18</pointsize>
+     <pointsize>24</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
     </font>
    </property>
    <property name="text">
-    <string>Almacenes</string>
+    <string>ALMACENES</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
