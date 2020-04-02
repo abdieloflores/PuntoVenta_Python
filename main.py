@@ -252,7 +252,7 @@ class productos(QtWidgets.QWidget):
     def crearTabla(self,filas,columnas,datos):
         self.table_productos.setRowCount(filas)
         self.table_productos.setColumnCount(columnas)
-        self.table_productos.setHorizontalHeaderLabels(["ID","CODIGO","NOMBRE", "DESCRIPCION","STOCKMIN","STOCKMAX","COSTO","PRECIO","PROV","ALMA"])
+        self.table_productos.setHorizontalHeaderLabels(["ID","COD","NOMBRE", "DESCRIPCION","MIN","MAX","COSTO","PRECIO","PROV","ALM"])
         self.header = self.table_productos.horizontalHeader()
         self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
@@ -292,8 +292,8 @@ class productos(QtWidgets.QWidget):
         if self.table_productos.currentRow() >= 0:
             fila = self.table_productos.currentRow()
             lista = []
-            for i in self.productos:
-                lista.append(self.productos[fila][0])
+            for i in range(0,len(self.productos[fila])):
+                lista.append(self.productos[fila][i])
             update = updateProducto(self)
             update.setInfo(lista)
             update.show()
@@ -342,20 +342,20 @@ class nuevoProducto(QtWidgets.QMainWindow):
         
         listaProveedores = []
         listaAlmacenes = []
-        for i in range(len(self.proveedores)):
-            nombre = self.proveedores[i][2]+" "+self.proveedores[i][3]+" "+self.proveedores[i][4]
+        for i in range(0,len(self.proveedores)):
+            nombre = self.proveedores[i][1]+" "+self.proveedores[i][2]+" "+self.proveedores[i][3]
             listaProveedores.append(nombre)
-        for i in range(len(productos)):
+        for i in range(0,len(self.almacenes)):
             listaAlmacenes.append(self.almacenes[i][1])
         self.comboBox_proveedor.addItems(listaProveedores)
-        self.comboBox_producto.addItems(listaAlmacenes)
+        self.comboBox_almacen.addItems(listaAlmacenes)
 
     def guardar(self):
         codigoBarras = self.line_Cbarras.text()
         nombre = self.line_nombre.text()
         descripcion = self.line_descripcion.text()
         stockmin = self.line_stockmin.text()
-        stockmax = self.line_stockmx.text()
+        stockmax = self.line_stockmax.text()
         costo = self.line_costo.text()
         precio = self.line_precio.text()
         proveedor = self.proveedores[self.comboBox_proveedor.currentIndex()][0]
@@ -413,13 +413,13 @@ class updateProducto(QtWidgets.QMainWindow):
         
         listaProveedores = []
         listaAlmacenes = []
-        for i in range(len(self.proveedores)):
-            nombre = self.proveedores[i][2]+" "+self.proveedores[i][3]+" "+self.proveedores[i][4]
+        for i in range(0,len(self.proveedores)):
+            nombre = self.proveedores[i][1]+" "+self.proveedores[i][2]+" "+self.proveedores[i][3]
             listaProveedores.append(nombre)
-        for i in range(len(productos)):
+        for i in range(0,len(self.almacenes)):
             listaAlmacenes.append(self.almacenes[i][1])
         self.comboBox_proveedor.addItems(listaProveedores)
-        self.comboBox_producto.addItems(listaAlmacenes)
+        self.comboBox_almacen.addItems(listaAlmacenes)
 
     def setInfo(self,lista):
         self.lista = lista
@@ -428,37 +428,32 @@ class updateProducto(QtWidgets.QMainWindow):
         self.nombre = lista[2]
         self.descripcion = lista[3] 
         self.stockmin = lista[4] 
-        self.stockmax = lista[5] 
+        self.stockmax = lista[5]
         self.costo = lista[6] 
         self.precio = lista[7] 
         self.proveedor = lista[8] 
         self.almacen = lista[9] 
 
-        self.line_Cbarras.setText(self.num)
-        self.line_nombre.setText(self.codigoBarras)
-        self.line_descripcion.setText(self.nombre)
-        self.line_stockmin.setText(self.stockmin)
-        self.line_stockmx.setText(self.stockmax)
-        self.line_costo.setText(self.costo)
-        self.line_precio.setText(self.precio)
-        listaProveedores = []
-        listaAlmacenes = []
-        for i in range(len(self.proveedores)):
-            nombre = self.proveedores[i][2]+" "+self.proveedores[i][3]+" "+self.proveedores[i][4]
-            listaProveedores.append(nombre)
-        for i in range(len(productos)):
-            listaAlmacenes.append(self.almacenes[i][1])
+        self.line_Cbarras.setText(str(self.codigoBarras))
+        self.line_nombre.setText(self.nombre)
+        self.line_descripcion.setText(self.descripcion )
+        self.line_stockmin.setText(str(self.stockmin))
+        self.line_stockmax.setText(str(self.stockmax))
+        self.line_costo.setText(str(self.costo))
+        self.line_precio.setText(str(self.precio))
+
         self.llenarComboBox()
     
     def getInfo(self):
         return self.num,self.nombre
 
     def guardar(self):
+        idProducto = self.num
         codigoBarras = self.line_Cbarras.text()
         nombre = self.line_nombre.text()
         descripcion = self.line_descripcion.text()
         stockmin = self.line_stockmin.text()
-        stockmax = self.line_stockmx.text()
+        stockmax = self.line_stockmax.text()
         costo = self.line_costo.text()
         precio = self.line_precio.text()
         proveedor = self.proveedores[self.comboBox_proveedor.currentIndex()][0]
@@ -468,8 +463,7 @@ class updateProducto(QtWidgets.QMainWindow):
             conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
             try:
                 with conexion.cursor() as cursor:
-                    cursor.execute("INSERT INTO Productos (prod_CodBarras,prod_Nombre,prod_Descrip,prod_StockMin,prod_StockMax,prod_Costo,prod_Precio,prod_IdProv,prod_IdAlmacen)"
-                                    "VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s')" % (codigoBarras,nombre,descripcion,stockmin,stockmax,costo,precio,proveedor,almacen))
+                    cursor.execute("UPDATE Productos SET prod_CodBarras = '%s',prod_Nombre = '%s', prod_Descrip = '%s', prod_StockMin = '%s', prod_StockMax = '%s', prod_Costo = '%s', prod_Precio = '%s', prod_IdProv = '%s', prod_IdAlmacen = '%s' WHERE (prod_Id = '%s')" % (codigoBarras,nombre,descripcion,stockmin,stockmax,costo,precio,proveedor,almacen,idProducto))
                     conexion.commit()
             finally:
                 conexion.close()

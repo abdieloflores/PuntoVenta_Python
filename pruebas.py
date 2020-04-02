@@ -1,35 +1,29 @@
-"""import random
-def unico(x,L):
-  esUnico=True
-  for i in range(len(L)):
-    if x==L[i]:
-      esUnico=False
-      break
-  return esUnico
-L=[]
-j=0
-suma = 0
-while j<100:
-  x=random.randint(1,100)
-  if unico(x,L):
-    suma += x
-    if x == 17 or x ==35 or x ==53 or x ==71 or x ==85 or x ==89 or x ==100:
-        print(j,".- "," Suma = ",suma, " GANADOR ")
-    else:
-        print(j,".- "," Suma = ",suma)
-    L.append(x)
-    j+=1"""
+import pymysql
 
-class Person:
-  def __init__(self,nombre,edad):
-    self.nombre = nombre
-    self.edad = edad
+#Licencias Base de Datos
+_host='localhost'
+_user='root'
+_password='gafo951101'
+_db='PuntoVenta'
 
-  def imprimir(self):
-    print("Nombre: ",self.nombre," - Edad: ",self.edad)
+try:
+  conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+  try:
+    with conexion.cursor() as cursor:
+      cursor.execute("SELECT prov_Id,prov_Nombres,prov_Paterno,prov_Materno FROM Proveedores")
+      proveedores = cursor.fetchall()
+      cursor.execute("SELECT * FROM Almacenes")
+      almacenes = cursor.fetchall() 
+  finally:
+    conexion.close()
+except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+  print("Ocurrió un error al conectar: ", e)
 
-class Empleado(Person):
-  def __init__(self,trabajo):
-    super(Empleado,self).__init__(self)
-    
+listaProveedores = []
+listaAlmacenes = []
+for i in range(0,len(proveedores)):
+  nombre = proveedores[i][2]
+  listaProveedores.append(nombre)
+
+print (listaProveedores)
 
