@@ -149,6 +149,9 @@ color: rgb(97, 99, 99);
       <family>Avenir</family>
      </font>
     </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
+    </property>
    </widget>
    <widget class="QLabel" name="label_contrasena">
     <property name="geometry">

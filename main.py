@@ -1149,6 +1149,7 @@ class nuevaSalida(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(nuevaSalida,self).__init__(parent)
         uic.loadUi('UI/nuevaSalida.ui',self)
+        
         self.bGuardar.clicked.connect(self.guardar)
         self.bSalir.clicked.connect(self.cerrar)
         self.line_Cbarras.editingFinished.connect(self.buscarProducto)
@@ -1217,6 +1218,140 @@ class entradas(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(entradas,self).__init__(parent)
         uic.loadUi('UI/entradas.ui',self)
+
+        self.bNuevo.clicked.connect(self.nuevo)
+        self.bEliminar.clicked.connect(self.eliminar)
+        self.bActualizar.clicked.connect(self.actualizar)
+        
+        self.entradas,self.filas= self.consultarTodo()
+        self.crearTabla(self.filas,7,self.entradas)
+    
+    def crearTabla(self,filas,columnas,datos):
+        self.table_entradas.setRowCount(filas)
+        self.table_entradas.setColumnCount(columnas)
+        self.table_entradas.setHorizontalHeaderLabels(["ID","ALMACEN","PRODUCTO", "CANTIDAD","MOTIVO","FECHA & HORA","ESTADO"])
+        self.header = self.table_entradas.horizontalHeader()
+        self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+        
+        for i in range (0,self.filas):
+            for j in range (0,7):
+                self.table_entradas.setItem(i, j, QtWidgets.QTableWidgetItem(str(datos[i][j])))
+    
+    def consultarTodo(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    sentencia = "SELECT * FROM Entradas WHERE sal_estado = 1"
+                    cursor.execute(sentencia)
+                    entradas = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        
+        return entradas,len(entradas)
+    
+    def nuevo(self):
+        entrada=nuevaEntrada(self)
+        entrada.show()
+    
+    def eliminar(self):
+        if self.table_entradas.currentRow() >= 0:
+            fila = self.table_entradas.currentRow()
+            num = self.entradas[fila][0]
+            producto = self.entradas[fila][2]
+            cantidad = self.entradas[fila][3]
+            try:
+                conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+                try:
+                    with conexion.cursor() as cursor:    
+                        cursor.execute("UPDATE Entradas SET sal_estado = '%s' WHERE ( sal_Id = '%s')" % (0,num))
+                        cursor.execute("UPDATE Productos SET prod_existencias=(prod_existencias+%s) WHERE prod_Id='%s'" % (cantidad,producto))
+                    conexion.commit()
+                finally:
+                    conexion.close()
+            except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+                print("Ocurrió un error al conectar: ", e)
+
+    def actualizar(self):
+        self.entradas,self.filas= self.consultarTodo()
+        self.crearTabla(self.filas,7,self.entradas)
+
+class nuevaEntrada(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(nuevaEntrada,self).__init__(parent)
+        uic.loadUi('UI/nuevaEntrada.ui',self)
+        
+        self.bGuardar.clicked.connect(self.guardar)
+        self.bSalir.clicked.connect(self.cerrar)
+        self.line_Cbarras.editingFinished.connect(self.buscarProducto)
+
+        self.llenarComboBox()
+    
+    def llenarComboBox(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT * FROM Almacenes")
+                    self.almacenes = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        
+        listaAlmacenes = []
+        for i in range(0,len(self.almacenes)):
+            listaAlmacenes.append(self.almacenes[i][1])
+        self.comboBox_almacen.addItems(listaAlmacenes)
+    
+    def buscarProducto(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT * FROM Productos WHERE prod_CodBarras='%s'" % (self.line_Cbarras.text()))
+                    self.productos = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        if len(self.productos)==1:
+            self.line_nombre.setText(self.productos[0][2])
+            self.num = self.productos[0][0]
+        else:
+            self.line_nombre.setText("No Existe !!!!!!!!")
+
+    def guardar(self):
+        almacen = self.almacenes[self.comboBox_almacen.currentIndex()][0]
+        producto = self.num
+        cantidad = self.line_cantidad.text()
+        motivo = self.line_motivo.text()
+        fechaHora = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("INSERT INTO Entradas (ent_IdAlma,ent_IdProd,ent_Cantidad,ent_Motivo,ent_FechaHora,ent_estado)"
+                                    "VALUES ('%s','%s','%s','%s','%s','%s')" % (almacen,producto,cantidad,motivo,fechaHora,1))
+                    cursor.execute("UPDATE Productos SET prod_existencias=(prod_existencias-%s) WHERE prod_Id='%s'" % (cantidad,producto))
+                    conexion.commit()
+            finally:
+                conexion.close()
+                self.cerrar()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+    
+    def cerrar(self):
+        self.close()
 
 class reportes(QtWidgets.QWidget):
     def __init__(self,parent=None):

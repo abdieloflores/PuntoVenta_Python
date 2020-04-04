@@ -308,6 +308,9 @@ background-color: rgb(49, 50, 50);
       <family>Avenir</family>
      </font>
     </property>
+    <property name="maxLength">
+     <number>13</number>
+    </property>
    </widget>
    <widget class="QLabel" name="label_rfc">
     <property name="geometry">
@@ -340,6 +343,9 @@ background-color: rgb(49, 50, 50);
      <font>
       <family>Avenir</family>
      </font>
+    </property>
+    <property name="maxLength">
+     <number>10</number>
     </property>
    </widget>
    <widget class="QLabel" name="label_telefono">
@@ -391,6 +397,9 @@ background-color: rgb(49, 50, 50);
      <font>
       <family>Avenir</family>
      </font>
+    </property>
+    <property name="maxLength">
+     <number>10</number>
     </property>
    </widget>
    <widget class="QLabel" name="label_correo">
@@ -458,6 +467,9 @@ background-color: rgb(49, 50, 50);
      <font>
       <family>Avenir</family>
      </font>
+    </property>
+    <property name="maxLength">
+     <number>5</number>
     </property>
    </widget>
    <widget class="QLineEdit" name="line_calle">
