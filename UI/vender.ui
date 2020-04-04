@@ -55,7 +55,7 @@
    <property name="geometry">
     <rect>
      <x>550</x>
-     <y>290</y>
+     <y>340</y>
      <width>60</width>
      <height>16</height>
     </rect>
@@ -114,7 +114,7 @@
    <property name="geometry">
     <rect>
      <x>550</x>
-     <y>310</y>
+     <y>360</y>
      <width>171</width>
      <height>20</height>
     </rect>
@@ -135,28 +135,6 @@
     </rect>
    </property>
   </widget>
-  <widget class="QLabel" name="label_titulo">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>20</y>
-     <width>751</width>
-     <height>30</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Avenir</family>
-     <pointsize>18</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>NOTA DE VENTA</string>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-  </widget>
   <widget class="QLineEdit" name="line_cantidad">
    <property name="geometry">
     <rect>
@@ -165,29 +143,6 @@
      <width>170</width>
      <height>20</height>
     </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="bSalir">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>530</y>
-     <width>120</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Salir</string>
-   </property>
-   <property name="icon">
-    <iconset resource="../imagenes/imagenes.qrc">
-     <normaloff>:/Iconos/Salir.png</normaloff>:/Iconos/Salir.png</iconset>
-   </property>
-   <property name="iconSize">
-    <size>
-     <width>20</width>
-     <height>16</height>
-    </size>
    </property>
   </widget>
   <widget class="QPushButton" name="bAgregar">
@@ -401,6 +356,8 @@
     <font>
      <family>Avenir</family>
      <pointsize>18</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
     </font>
    </property>
    <property name="text">
@@ -445,7 +402,7 @@
    <property name="geometry">
     <rect>
      <x>550</x>
-     <y>250</y>
+     <y>300</y>
      <width>161</width>
      <height>30</height>
     </rect>
@@ -454,6 +411,8 @@
     <font>
      <family>Avenir</family>
      <pointsize>18</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
     </font>
    </property>
    <property name="text">
@@ -470,7 +429,7 @@
    <property name="geometry">
     <rect>
      <x>550</x>
-     <y>370</y>
+     <y>420</y>
      <width>171</width>
      <height>20</height>
     </rect>
@@ -480,7 +439,7 @@
    <property name="geometry">
     <rect>
      <x>550</x>
-     <y>350</y>
+     <y>400</y>
      <width>60</width>
      <height>16</height>
     </rect>
@@ -571,6 +530,79 @@
      <width>170</width>
      <height>20</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_titulo">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>20</y>
+     <width>751</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Avenir</family>
+     <pointsize>24</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>VENDER</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="bGuardar_2">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>250</y>
+     <width>120</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Copiar</string>
+   </property>
+   <property name="icon">
+    <iconset resource="../imagenes/imagenes.qrc">
+     <normaloff>:/Iconos/Guardar.png</normaloff>:/Iconos/Guardar.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>16</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="bGuardar_3">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>460</y>
+     <width>120</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Copiar</string>
+   </property>
+   <property name="icon">
+    <iconset resource="../imagenes/imagenes.qrc">
+     <normaloff>:/Iconos/Guardar.png</normaloff>:/Iconos/Guardar.png</iconset>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>20</width>
+     <height>16</height>
+    </size>
    </property>
   </widget>
  </widget>

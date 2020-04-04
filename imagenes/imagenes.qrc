@@ -1,9 +1,11 @@
 <RCC>
   <qresource prefix="Backgrounds">
-    <file>FondoMenu.png</file>
     <file>FondoLogin.png</file>
   </qresource>
   <qresource prefix="Iconos">
+    <file>Configuracion.png</file>
+    <file>Inicio.png</file>
+    <file>Productos.png</file>
     <file>Update.png</file>
     <file>LogoIco.png</file>
     <file>Recuperar.png</file>
@@ -16,7 +18,6 @@
     <file>Entradas.png</file>
     <file>Reportes.png</file>
     <file>Salidas.png</file>
-    <file>Productos.png</file>
     <file>Salir.png</file>
     <file>Vender.png</file>
   </qresource>

@@ -11,9 +11,9 @@ _user='root'
 _password='gafo951101'
 _db='PuntoVenta'
 
-class Login(QtWidgets.QMainWindow):
+class login(QtWidgets.QMainWindow):
     def __init__(self):
-        super(Login,self).__init__()
+        super(login,self).__init__()
         uic.loadUi('UI/login.ui',self)
         self.show()
         self.button_iniciar.clicked.connect(self.clicIniciar)
@@ -34,8 +34,8 @@ class Login(QtWidgets.QMainWindow):
                         self.line_usuario.clear()
                         self.line_contrasena.clear()  
                         self.hide()
-                        otraventana=VentanaPrincipal(self)
-                        otraventana.setNombreHeader(vendedores[0][1].title())
+                        otraventana=ventanaPrincipal(self)
+                        otraventana.setNombreHeader(vendedores[0][3].title())
                         otraventana.show()
                     else: 
                         self.line_usuario.clear()
@@ -130,70 +130,90 @@ class consultaContrasena(QtWidgets.QMainWindow):
         self.parent().show()
         self.close()  
 
-class VentanaPrincipal(QtWidgets.QMainWindow):
+class ventanaPrincipal(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
-        super(VentanaPrincipal,self).__init__(parent)
+        super(ventanaPrincipal,self).__init__(parent)
         uic.loadUi('UI/mainWindow.ui',self)
 
+        self.wInicio = inicio(self.body)
         self.wVender = vender(self.body)
         self.wProductos = productos(self.body)
         self.wClientes = clientes(self.body)
         self.wAlmacenes = almacenes(self.body)
+        self.wProveedores = proveedores(self.body)
         self.wSalidas = salidas(self.body)
         self.wEntradas = entradas(self.body)
-        self.wReportes = proveedores(self.body)
+        self.wReportes = reportes(self.body)
+        self.wConfiguracion = configuracion(self.body)
 
         self.refreshBody()
 
-        self.bSalir.clicked.connect(self.cerrar)
+        self.bInicio.clicked.connect(self.abrirInicio)
         self.bVender.clicked.connect(self.abrirVender)
         self.bProductos.clicked.connect(self.abrirProductos)
         self.bClientes.clicked.connect(self.abrirClientes)
         self.bAlmacenes.clicked.connect(self.abrirAlmacenes)
+        self.bProveedores.clicked.connect(self.abrirProveedores)
         self.bSalidas.clicked.connect(self.abrirSalidas)
         self.bEntradas.clicked.connect(self.abrirEntradas)
-        self.bProveedores.clicked.connect(self.abrirProveedores)
+        self.bReportes.clicked.connect(self.abrirReportes)
+        self.bConfiguracion.clicked.connect(self.abrirConfiguracion)
+        self.bSalir.clicked.connect(self.cerrar)
 
     def setNombreHeader(self,nombre):
         self.label_header.setText("Bienvenido %s" % (nombre))
 
-    
+    def abrirInicio(self):
+        self.refreshBody()
+        self.wInicio.show()
+
     def abrirVender(self):
         self.refreshBody()
         self.wVender.show()
-        
+
     def abrirProductos(self):
         self.refreshBody()
         self.wProductos.show()
-    
+
     def abrirClientes(self):
         self.refreshBody()
         self.wClientes.show()
-    
+
     def abrirAlmacenes(self):
         self.refreshBody()
         self.wAlmacenes.show()
-    
+
+    def abrirProveedores(self):
+        self.refreshBody()
+        self.wProveedores.show()
+
     def abrirSalidas(self):
         self.refreshBody()
         self.wSalidas.show()
-    
+
     def abrirEntradas(self):
         self.refreshBody()
         self.wEntradas.show()
 
-    def abrirProveedores(self):
+    def abrirReportes(self):
         self.refreshBody()
         self.wReportes.show()
 
+    def abrirConfiguracion(self):
+        self.refreshBody()
+        self.wConfiguracion.show()
+
     def refreshBody(self):
-        self.wProductos.close()
+        self.wInicio.close()
         self.wVender.close()
+        self.wProductos.close()
         self.wClientes.close()
         self.wAlmacenes.close()
+        self.wProveedores.close()
         self.wSalidas.close()
         self.wEntradas.close()
         self.wReportes.close()
+        self.wConfiguracion.close()
 
     def cerrar(self):
         self.wProductos.close()
@@ -201,11 +221,15 @@ class VentanaPrincipal(QtWidgets.QMainWindow):
         self.parent().show()
         self.close()
 
+class inicio(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(inicio,self).__init__(parent)
+        uic.loadUi('UI/inicio.ui',self)
+
 class vender(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(vender,self).__init__(parent)
         uic.loadUi('UI/vender.ui',self)
-        self.bSalir.clicked.connect(self.cerrar)
 
         fecha = str(datetime.date.today())
         self.line_fecha.setText(fecha)
@@ -238,9 +262,6 @@ class vender(QtWidgets.QWidget):
         self.comboBox_cliente.addItems(nombres)
         self.comboBox_producto.addItems(prods)
 
-    def cerrar(self):
-        self.close() 
-
 class productos(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(productos,self).__init__(parent)
@@ -265,7 +286,7 @@ class productos(QtWidgets.QWidget):
         self.header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
-        #self.header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
@@ -1058,7 +1079,136 @@ class salidas(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(salidas,self).__init__(parent)
         uic.loadUi('UI/salidas.ui',self)
+
+        self.bNuevo.clicked.connect(self.nuevo)
+        self.bEliminar.clicked.connect(self.eliminar)
+        self.bActualizar.clicked.connect(self.actualizar)
+        
+        self.salidas,self.filas= self.consultarTodo()
+        self.crearTabla(self.filas,7,self.salidas)
+    
+    def crearTabla(self,filas,columnas,datos):
+        self.table_salidas.setRowCount(filas)
+        self.table_salidas.setColumnCount(columnas)
+        self.table_salidas.setHorizontalHeaderLabels(["ID","ALMACEN","PRODUCTO", "CANTIDAD","MOTIVO","FECHA & HORA","ESTADO"])
+        self.header = self.table_salidas.horizontalHeader()
+        self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+        
+        for i in range (0,self.filas):
+            for j in range (0,7):
+                self.table_salidas.setItem(i, j, QtWidgets.QTableWidgetItem(str(datos[i][j])))
+    
+    def consultarTodo(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    sentencia = "SELECT * FROM Salidas WHERE sal_estado = 1"
+                    cursor.execute(sentencia)
+                    salidas = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        
+        return salidas,len(salidas)
+    
+    def nuevo(self):
+        salida=nuevaSalida(self)
+        salida.show()
+    
+    def eliminar(self):
+        if self.table_salidas.currentRow() >= 0:
+            fila = self.table_salidas.currentRow()
+            num = self.salidas[fila][0]
+            producto = self.salidas[fila][2]
+            cantidad = self.salidas[fila][3]
+            try:
+                conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+                try:
+                    with conexion.cursor() as cursor:    
+                        cursor.execute("UPDATE Salidas SET sal_estado = '%s' WHERE ( sal_Id = '%s')" % (0,num))
+                        cursor.execute("UPDATE Productos SET prod_existencias=(prod_existencias+%s) WHERE prod_Id='%s'" % (cantidad,producto))
+                    conexion.commit()
+                finally:
+                    conexion.close()
+            except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+                print("Ocurrió un error al conectar: ", e)
+
+    def actualizar(self):
+        self.salidas,self.filas= self.consultarTodo()
+        self.crearTabla(self.filas,7,self.salidas)
+
+class nuevaSalida(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(nuevaSalida,self).__init__(parent)
+        uic.loadUi('UI/nuevaSalida.ui',self)
+        self.bGuardar.clicked.connect(self.guardar)
         self.bSalir.clicked.connect(self.cerrar)
+        self.line_Cbarras.editingFinished.connect(self.buscarProducto)
+
+        self.llenarComboBox()
+    
+    def llenarComboBox(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT * FROM Almacenes")
+                    self.almacenes = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        
+        listaAlmacenes = []
+        for i in range(0,len(self.almacenes)):
+            listaAlmacenes.append(self.almacenes[i][1])
+        self.comboBox_almacen.addItems(listaAlmacenes)
+    
+    def buscarProducto(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT * FROM Productos WHERE prod_CodBarras='%s'" % (self.line_Cbarras.text()))
+                    self.productos = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        if len(self.productos)==1:
+            self.line_nombre.setText(self.productos[0][2])
+            self.num = self.productos[0][0]
+        else:
+            self.line_nombre.setText("No Existe !!!!!!!!")
+
+    def guardar(self):
+        almacen = self.almacenes[self.comboBox_almacen.currentIndex()][0]
+        producto = self.num
+        cantidad = self.line_cantidad.text()
+        motivo = self.line_motivo.text()
+        fechaHora = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("INSERT INTO Salidas (sal_IdAlma,sal_IdProd,sal_Cantidad,sal_Motivo,sal_FechaHora,sal_estado)"
+                                    "VALUES ('%s','%s','%s','%s','%s','%s')" % (almacen,producto,cantidad,motivo,fechaHora,1))
+                    cursor.execute("UPDATE Productos SET prod_existencias=(prod_existencias-%s) WHERE prod_Id='%s'" % (cantidad,producto))
+                    conexion.commit()
+            finally:
+                conexion.close()
+                self.cerrar()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
     
     def cerrar(self):
         self.close()
@@ -1067,11 +1217,17 @@ class entradas(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(entradas,self).__init__(parent)
         uic.loadUi('UI/entradas.ui',self)
-        self.bSalir.clicked.connect(self.cerrar)
-    
-    def cerrar(self):
-        self.close()
+
+class reportes(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(reportes,self).__init__(parent)
+        uic.loadUi('UI/reportes.ui',self)
+
+class configuracion(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(configuracion,self).__init__(parent)
+        uic.loadUi('UI/configuracion.ui',self)
 
 app = QtWidgets.QApplication(sys.argv)
-window = Login()
+window = login()
 app.exec()

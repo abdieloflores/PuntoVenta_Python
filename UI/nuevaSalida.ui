@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>nuevaSalida</class>
+ <widget class="QMainWindow" name="nuevaSalida">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>510</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>510</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>400</width>
+    <height>510</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Nueva Salida</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#nuevaSalida{
+background-color: rgb(50, 50, 50);
+}
+.QLabel{
+	color: rgb(255, 255, 255);
+}
+.QLineEdit{
+	color: rgb(97, 99, 99);
+	border:none;
+}
+.QPushButton{
+	color: rgb(250, 255, 255);
+	background-color: rgb(168, 0, 16);
+	border: none;
+}
+.QPushButton:hover{
+	color: rgb(255,255,255);
+	background-color: rgb(30,30,30);
+	border: none;
+}
+.QComboBox{
+	border-radius:none;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label_titulo">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>400</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Nueva Salida</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_Cbarras">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>160</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Codigo de barras</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_Cbarras">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>180</y>
+      <width>300</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_nombre">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>250</y>
+      <width>300</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_nombre">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>230</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Nombre</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bGuardar">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>450</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string>Guardar</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../imagenes/imagenes.qrc">
+      <normaloff>:/Iconos/Guardar.png</normaloff>:/Iconos/Guardar.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>16</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bSalir">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>450</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string>Salir</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../imagenes/imagenes.qrc">
+      <normaloff>:/Iconos/Salir.png</normaloff>:/Iconos/Salir.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>16</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_almacen">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>110</y>
+      <width>300</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_cantidad">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>320</y>
+      <width>300</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_cantidad">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>300</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Cantidad</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_motivo">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>370</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Motivo</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_almacen">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>90</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Almacen</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_motivo">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>390</y>
+      <width>300</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../imagenes/imagenes.qrc"/>
+ </resources>
+ <connections/>
+</ui>
