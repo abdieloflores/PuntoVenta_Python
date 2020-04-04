@@ -35,6 +35,7 @@ class Login(QtWidgets.QMainWindow):
                         self.line_contrasena.clear()  
                         self.hide()
                         otraventana=VentanaPrincipal(self)
+                        otraventana.setNombreHeader(vendedores[0][1].title())
                         otraventana.show()
                     else: 
                         self.line_usuario.clear()
@@ -133,14 +134,14 @@ class VentanaPrincipal(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(VentanaPrincipal,self).__init__(parent)
         uic.loadUi('UI/mainWindow.ui',self)
-        
+
         self.wVender = vender(self.body)
         self.wProductos = productos(self.body)
         self.wClientes = clientes(self.body)
         self.wAlmacenes = almacenes(self.body)
         self.wSalidas = salidas(self.body)
         self.wEntradas = entradas(self.body)
-        self.wReportes = reportes(self.body)
+        self.wReportes = proveedores(self.body)
 
         self.refreshBody()
 
@@ -151,8 +152,12 @@ class VentanaPrincipal(QtWidgets.QMainWindow):
         self.bAlmacenes.clicked.connect(self.abrirAlmacenes)
         self.bSalidas.clicked.connect(self.abrirSalidas)
         self.bEntradas.clicked.connect(self.abrirEntradas)
-        self.bReportes.clicked.connect(self.abrirReportes)
+        self.bProveedores.clicked.connect(self.abrirProveedores)
 
+    def setNombreHeader(self,nombre):
+        self.label_header.setText("Bienvenido %s" % (nombre))
+
+    
     def abrirVender(self):
         self.refreshBody()
         self.wVender.show()
@@ -177,7 +182,7 @@ class VentanaPrincipal(QtWidgets.QMainWindow):
         self.refreshBody()
         self.wEntradas.show()
 
-    def abrirReportes(self):
+    def abrirProveedores(self):
         self.refreshBody()
         self.wReportes.show()
 
@@ -247,12 +252,12 @@ class productos(QtWidgets.QWidget):
         self.bActualizar.clicked.connect(self.actualizar)
         
         self.productos,self.filas = self.consultarTodo()
-        self.crearTabla(self.filas,10,self.productos)
+        self.crearTabla(self.filas,11,self.productos)
     
     def crearTabla(self,filas,columnas,datos):
         self.table_productos.setRowCount(filas)
         self.table_productos.setColumnCount(columnas)
-        self.table_productos.setHorizontalHeaderLabels(["ID","COD","NOMBRE", "DESCRIPCION","MIN","MAX","COSTO","PRECIO","PROV","ALM"])
+        self.table_productos.setHorizontalHeaderLabels(["ID","COD","NOMBRE", "DESCRIPCION","MIN","MAX","EXISTENCIA","COSTO","PRECIO","PROV","ALM"])
         self.header = self.table_productos.horizontalHeader()
         self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
@@ -260,13 +265,14 @@ class productos(QtWidgets.QWidget):
         self.header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
-        self.header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+        #self.header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(10, QtWidgets.QHeaderView.ResizeToContents)
         
         for i in range (0,self.filas):
-            for j in range (0,10):
+            for j in range (0,11):
                 self.table_productos.setItem(i, j, QtWidgets.QTableWidgetItem(str(datos[i][j])))
     
     def consultarTodo(self):
@@ -315,7 +321,7 @@ class productos(QtWidgets.QWidget):
 
     def actualizar(self):
         self.productos,self.filas = self.consultarTodo()
-        self.crearTabla(self.filas,10,self.productos)
+        self.crearTabla(self.filas,11,self.productos)
 
 class nuevoProducto(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
@@ -429,10 +435,10 @@ class updateProducto(QtWidgets.QMainWindow):
         self.descripcion = lista[3] 
         self.stockmin = lista[4] 
         self.stockmax = lista[5]
-        self.costo = lista[6] 
-        self.precio = lista[7] 
-        self.proveedor = lista[8] 
-        self.almacen = lista[9] 
+        self.costo = lista[7] 
+        self.precio = lista[8] 
+        self.proveedor = lista[9] 
+        self.almacen = lista[10] 
 
         self.line_Cbarras.setText(str(self.codigoBarras))
         self.line_nombre.setText(self.nombre)
@@ -478,8 +484,214 @@ class clientes(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(clientes,self).__init__(parent)
         uic.loadUi('UI/clientes.ui',self)
-        self.bSalir.clicked.connect(self.cerrar)
+
+        self.bNuevo.clicked.connect(self.nuevo)
+        self.bEditar.clicked.connect(self.editar)
+        self.bEliminar.clicked.connect(self.eliminar)
+        self.bActualizar.clicked.connect(self.actualizar)
+        
+        self.clientes,self.filas = self.consultarTodo()
+        self.crearTabla(self.filas,18,self.clientes)
     
+    def crearTabla(self,filas,columnas,datos):
+        self.table_clientes.setRowCount(filas)
+        self.table_clientes.setColumnCount(columnas)
+        self.table_clientes.setHorizontalHeaderLabels(["ID","TIPO","NOMBRES", "PATERNO","MATERNO","RFC","CALLE","EXT","INT","CP","COLONIA","LOCALIDAD","CIUDAD","ESTADO","PAIS","TELEFONO","CELULAR","CORREO"])
+        self.header = self.table_clientes.horizontalHeader()
+        self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(10, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(11, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(12, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(13, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(14, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(15, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(16, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(17, QtWidgets.QHeaderView.ResizeToContents)
+        
+        for i in range (0,self.filas):
+            for j in range (0,18):
+                self.table_clientes.setItem(i, j, QtWidgets.QTableWidgetItem(str(datos[i][j])))
+    
+    def consultarTodo(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    sentencia = "SELECT * FROM Clientes"
+                    cursor.execute(sentencia)
+                    clientes = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        
+        return clientes,len(clientes)
+    
+    def nuevo(self):
+        cliente=nuevoCliente(self)
+        cliente.show()
+    
+    def editar(self):
+        if self.table_clientes.currentRow() >= 0:
+            fila = self.table_clientes.currentRow()
+            lista = []
+            for i in range(0,len(self.clientes[fila])):
+                lista.append(self.clientes[fila][i])
+            update = updateCliente(self)
+            update.setInfo(lista)
+            update.show()
+    
+    def eliminar(self):
+        if self.table_clientes.currentRow() >= 0:
+            fila = self.table_clientes.currentRow()
+            num = self.clientes[fila][0]
+            try:
+                conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+                try:
+                    with conexion.cursor() as cursor:    
+                        cursor.execute("DELETE FROM Clientes WHERE cli_Id = '%s' " % (num))
+                    conexion.commit()
+                finally:
+                    conexion.close()
+            except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+                print("Ocurrió un error al conectar: ", e)
+
+    def actualizar(self):
+        self.clientes,self.filas = self.consultarTodo()
+        self.crearTabla(self.filas,18,self.clientes)
+    
+class nuevoCliente(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(nuevoCliente,self).__init__(parent)
+        uic.loadUi('UI/nuevoCliente.ui',self)
+        self.bGuardar.clicked.connect(self.guardar)
+        self.bSalir.clicked.connect(self.cerrar)
+        
+    def guardar(self):
+        tipo = 0 if self.radioButton_fisica.isChecked() else 1
+        nombres = self.line_nombres.text()
+        paterno = self.line_paterno.text()
+        materno = self.line_materno.text()
+        rfc = self.line_rfc.text()
+        calle = self.line_calle.text()
+        exterior = self.line_ext.text()
+        interior = self.line_int.text()
+        codigoPostal = self.line_cp.text()
+        colonia = self.line_colonia.text()
+        localidad = self.line_localidad.text()
+        ciudad = self.line_ciudad.text()
+        estado = self.line_estado.text()
+        pais = self.line_pais.text()
+        telefono = self.line_telefono.text()
+        celular = self.line_celular.text()
+        correo = self.line_correo.text()
+
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("INSERT INTO Clientes (cli_Tipo,cli_Nombres,cli_Paterno,cli_Materno,cli_RFC,cli_Calle,cli_NumExt,cli_NumInt,cli_CP,cli_Col,cli_Localidad,cli_Ciudad,cli_Estado,cli_Pais,cli_Tel,cli_Cel,cli_Mail)"
+                                    "VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % (tipo,nombres,paterno,materno,rfc,calle,exterior,interior,codigoPostal,colonia,localidad,ciudad,estado,pais,telefono,celular,correo))
+                    conexion.commit()
+            finally:
+                conexion.close()
+                self.cerrar()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+    
+    def cerrar(self):
+        self.close()
+
+class updateCliente(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(updateCliente,self).__init__(parent)
+        uic.loadUi('UI/updateCliente.ui',self)
+        self.bGuardar.clicked.connect(self.guardar)
+        self.bSalir.clicked.connect(self.cerrar)
+
+    def setInfo(self,lista):
+        self.lista = lista
+        self.num = lista[0]
+        self.tipo = lista[1]
+        self.nombres = lista[2]
+        self.paterno = lista[3]
+        self.materno = lista[4]
+        self.rfc = lista[5]
+        self.calle = lista[6]
+        self.exterior = lista[7]
+        self.interior = lista[8]
+        self.codigoPostal = lista[9]
+        self.colonia = lista[10]
+        self.localidad = lista[11]
+        self.ciudad = lista[12]
+        self.estado = lista[13]
+        self.pais = lista[14]
+        self.telefono = lista[15]
+        self.celular = lista[16]
+        self.correo = lista[17]
+
+        if self.tipo == 1:
+            self.radioButton_fisica.isChecked(False)
+            self.radioButton_moral.isChecked(True)
+        self.line_nombres.setText(str(self.nombres))
+        self.line_paterno.setText(str(self.paterno))
+        self.line_materno.setText(str(self.materno))
+        self.line_rfc.setText(str(self.rfc))
+        self.line_calle.setText(str(self.calle))
+        self.line_ext.setText(str(self.exterior))
+        self.line_int.setText(str(self.interior))
+        self.line_cp.setText(str(self.codigoPostal))
+        self.line_colonia.setText(str(self.colonia))
+        self.line_localidad.setText(str(self.localidad))
+        self.line_ciudad.setText(str(self.ciudad))
+        self.line_estado.setText(str(self.estado))
+        self.line_pais.setText(str(self.pais))
+        self.line_telefono.setText(str(self.telefono))
+        self.line_celular.setText(str(self.celular))
+        self.line_correo.setText(str(self.correo))
+
+
+    def guardar(self):
+        num = self.num
+        tipo = 0 if self.radioButton_fisica.isChecked() else 1
+        nombres = self.line_nombres.text()
+        paterno = self.line_paterno.text()
+        materno = self.line_materno.text()
+        rfc = self.line_rfc.text()
+        calle = self.line_calle.text()
+        exterior = self.line_ext.text()
+        interior = self.line_int.text()
+        codigoPostal = self.line_cp.text()
+        colonia = self.line_colonia.text()
+        localidad = self.line_localidad.text()
+        ciudad = self.line_ciudad.text()
+        estado = self.line_estado.text()
+        pais = self.line_pais.text()
+        telefono = self.line_telefono.text()
+        celular = self.line_celular.text()
+        correo = self.line_correo.text()
+
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("UPDATE Clientes SET cli_Tipo = '%s', cli_Nombres = '%s', cli_Paterno = '%s', cli_Materno = '%s', cli_RFC = '%s', cli_Calle = '%s', cli_NumExt = '%s', cli_NumInt = '%s', cli_CP = '%s', cli_Col = '%s', cli_Localidad = '%s', cli_Ciudad = '%s', cli_Estado = '%s', cli_Pais = '%s', cli_Tel = '%s', cli_Cel = '%s', cli_Mail = '%s' WHERE (`cli_Id` = %s)" % (tipo,nombres,paterno,materno,rfc,calle,exterior,interior,codigoPostal,colonia,localidad,ciudad,estado,pais,telefono,celular,correo,num))
+                    conexion.commit()
+            finally:
+                conexion.close()
+                self.cerrar()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+
     def cerrar(self):
         self.close()
 
@@ -627,6 +839,221 @@ class updateAlmacen(QtWidgets.QMainWindow):
     def cerrar(self):
         self.close()
 
+class proveedores(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(proveedores,self).__init__(parent)
+        uic.loadUi('UI/proveedores.ui',self)
+
+        self.bNuevo.clicked.connect(self.nuevo)
+        self.bEditar.clicked.connect(self.editar)
+        self.bEliminar.clicked.connect(self.eliminar)
+        self.bActualizar.clicked.connect(self.actualizar)
+        
+        self.proveedores,self.filas = self.consultarTodo()
+        self.crearTabla(self.filas,18,self.proveedores)
+    
+    def crearTabla(self,filas,columnas,datos):
+        self.table_proveedores.setRowCount(filas)
+        self.table_proveedores.setColumnCount(columnas)
+        self.table_proveedores.setHorizontalHeaderLabels(["ID","TIPO","NOMBRES", "PATERNO","MATERNO","RFC","CALLE","EXT","INT","CP","COLONIA","LOCALIDAD","CIUDAD","ESTADO","PAIS","TELEFONO","CELULAR","CORREO"])
+        self.header = self.table_proveedores.horizontalHeader()
+        self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(10, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(11, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(12, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(13, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(14, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(15, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(16, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(17, QtWidgets.QHeaderView.ResizeToContents)
+        
+        for i in range (0,self.filas):
+            for j in range (0,18):
+                self.table_proveedores.setItem(i, j, QtWidgets.QTableWidgetItem(str(datos[i][j])))
+    
+    def consultarTodo(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    sentencia = "SELECT * FROM Proveedores"
+                    cursor.execute(sentencia)
+                    proveedores = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        
+        return proveedores,len(proveedores)
+    
+    def nuevo(self):
+        proveedor=nuevoProveedor(self)
+        proveedor.show()
+    
+    def editar(self):
+        if self.table_proveedores.currentRow() >= 0:
+            fila = self.table_proveedores.currentRow()
+            lista = []
+            for i in range(0,len(self.proveedores[fila])):
+                lista.append(self.proveedores[fila][i])
+            update = updateProveedor(self)
+            update.setInfo(lista)
+            update.show()
+    
+    def eliminar(self):
+        if self.table_proveedores.currentRow() >= 0:
+            fila = self.table_proveedores.currentRow()
+            num = self.proveedores[fila][0]
+            try:
+                conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+                try:
+                    with conexion.cursor() as cursor:    
+                        cursor.execute("DELETE FROM Proveedores WHERE prov_Id = '%s' " % (num))
+                    conexion.commit()
+                finally:
+                    conexion.close()
+            except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+                print("Ocurrió un error al conectar: ", e)
+
+    def actualizar(self):
+        self.proveedores,self.filas = self.consultarTodo()
+        self.crearTabla(self.filas,18,self.proveedores)
+
+class nuevoProveedor(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(nuevoProveedor,self).__init__(parent)
+        uic.loadUi('UI/nuevoProveedor.ui',self)
+        self.bGuardar.clicked.connect(self.guardar)
+        self.bSalir.clicked.connect(self.cerrar)
+    
+    def guardar(self):
+        tipo = 0 if self.radioButton_fisica.isChecked() else 1
+        nombres = self.line_nombres.text()
+        paterno = self.line_paterno.text()
+        materno = self.line_materno.text()
+        rfc = self.line_rfc.text()
+        calle = self.line_calle.text()
+        exterior = self.line_ext.text()
+        interior = self.line_int.text()
+        codigoPostal = self.line_cp.text()
+        colonia = self.line_colonia.text()
+        localidad = self.line_localidad.text()
+        ciudad = self.line_ciudad.text()
+        estado = self.line_estado.text()
+        pais = self.line_pais.text()
+        telefono = self.line_telefono.text()
+        celular = self.line_celular.text()
+        correo = self.line_correo.text()
+
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("INSERT INTO Proveedores (prov_Tipo,prov_Nombres,prov_Paterno,prov_Materno,prov_RFC,prov_Calle,prov_NumExt,prov_NumInt,prov_CP,prov_Col,prov_Localidad,prov_Ciudad,prov_Estado,prov_Pais,prov_Tel,prov_Cel,prov_Mail)"
+                                    "VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s')" % (tipo,nombres,paterno,materno,rfc,calle,exterior,interior,codigoPostal,colonia,localidad,ciudad,estado,pais,telefono,celular,correo))
+                    conexion.commit()
+            finally:
+                conexion.close()
+                self.cerrar()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+    
+    def cerrar(self):
+        self.close()
+
+class updateProveedor(QtWidgets.QMainWindow):
+    def __init__(self,parent=None):
+        super(updateProveedor,self).__init__(parent)
+        uic.loadUi('UI/updateProveedor.ui',self)
+        self.bGuardar.clicked.connect(self.guardar)
+        self.bSalir.clicked.connect(self.cerrar)
+
+    def setInfo(self,lista):
+        self.lista = lista
+        self.num = lista[0]
+        self.tipo = lista[1]
+        self.nombres = lista[2]
+        self.paterno = lista[3]
+        self.materno = lista[4]
+        self.rfc = lista[5]
+        self.calle = lista[6]
+        self.exterior = lista[7]
+        self.interior = lista[8]
+        self.codigoPostal = lista[9]
+        self.colonia = lista[10]
+        self.localidad = lista[11]
+        self.ciudad = lista[12]
+        self.estado = lista[13]
+        self.pais = lista[14]
+        self.telefono = lista[15]
+        self.celular = lista[16]
+        self.correo = lista[17]
+
+        if self.tipo == 1:
+            self.radioButton_fisica.isChecked(False)
+            self.radioButton_moral.isChecked(True)
+        self.line_nombres.setText(str(self.nombres))
+        self.line_paterno.setText(str(self.paterno))
+        self.line_materno.setText(str(self.materno))
+        self.line_rfc.setText(str(self.rfc))
+        self.line_calle.setText(str(self.calle))
+        self.line_ext.setText(str(self.exterior))
+        self.line_int.setText(str(self.interior))
+        self.line_cp.setText(str(self.codigoPostal))
+        self.line_colonia.setText(str(self.colonia))
+        self.line_localidad.setText(str(self.localidad))
+        self.line_ciudad.setText(str(self.ciudad))
+        self.line_estado.setText(str(self.estado))
+        self.line_pais.setText(str(self.pais))
+        self.line_telefono.setText(str(self.telefono))
+        self.line_celular.setText(str(self.celular))
+        self.line_correo.setText(str(self.correo))
+
+
+    def guardar(self):
+        num = self.num
+        tipo = 0 if self.radioButton_fisica.isChecked() else 1
+        nombres = self.line_nombres.text()
+        paterno = self.line_paterno.text()
+        materno = self.line_materno.text()
+        rfc = self.line_rfc.text()
+        calle = self.line_calle.text()
+        exterior = self.line_ext.text()
+        interior = self.line_int.text()
+        codigoPostal = self.line_cp.text()
+        colonia = self.line_colonia.text()
+        localidad = self.line_localidad.text()
+        ciudad = self.line_ciudad.text()
+        estado = self.line_estado.text()
+        pais = self.line_pais.text()
+        telefono = self.line_telefono.text()
+        celular = self.line_celular.text()
+        correo = self.line_correo.text()
+
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("UPDATE Proveedores SET prov_Tipo = '%s', prov_Nombres = '%s', prov_Paterno = '%s', prov_Materno = '%s', prov_RFC = '%s', prov_Calle = '%s', prov_NumExt = '%s', prov_NumInt = '%s', prov_CP = '%s', prov_Col = '%s', prov_Localidad = '%s', prov_Ciudad = '%s', prov_Estado = '%s', prov_Pais = '%s', prov_Tel = '%s', prov_Cel = '%s', prov_Mail = '%s' WHERE (`prov_Id` = %s)" % (tipo,nombres,paterno,materno,rfc,calle,exterior,interior,codigoPostal,colonia,localidad,ciudad,estado,pais,telefono,celular,correo,num))
+                    conexion.commit()
+            finally:
+                conexion.close()
+                self.cerrar()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+
+    def cerrar(self):
+        self.close()
+
 class salidas(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(salidas,self).__init__(parent)
@@ -644,16 +1071,6 @@ class entradas(QtWidgets.QWidget):
     
     def cerrar(self):
         self.close()
-
-class reportes(QtWidgets.QWidget):
-    def __init__(self,parent=None):
-        super(reportes,self).__init__(parent)
-        uic.loadUi('UI/reportes.ui',self)
-        self.bSalir.clicked.connect(self.cerrar)
-    
-    def cerrar(self):
-        self.close()
-
 
 app = QtWidgets.QApplication(sys.argv)
 window = Login()

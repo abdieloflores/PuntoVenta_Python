@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>updateCliente</class>
+ <widget class="QMainWindow" name="updateCliente">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>700</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>700</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Editar Cliente</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#updateCliente{
+background-color: rgb(49, 50, 50);
+}
+.QLabel{
+	color: rgb(255, 255, 255);
+}
+.QLineEdit{
+	color: rgb(97, 99, 99);
+	border:none;
+}
+.QPushButton{
+	color: rgb(250, 255, 255);
+	background-color: rgb(168, 0, 16);
+	border: none;
+}
+.QPushButton:hover{
+	color: rgb(255,255,255);
+	background-color: rgb(30,30,30);
+	border: none;
+}
+.QComboBox{
+	border-radius:none;
+}
+.QRadioButton{
+	color:rgb(255,255,255);
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label_titulo">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>10</y>
+      <width>801</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Editar Cliente</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_nombres">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>150</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Nombres (Razon Social)</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_nombres">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>170</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bGuardar">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>640</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string>Guardar</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../imagenes/imagenes.qrc">
+      <normaloff>:/Iconos/Guardar.png</normaloff>:/Iconos/Guardar.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>16</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="bSalir">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>640</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string>Salir</string>
+    </property>
+    <property name="icon">
+     <iconset resource="../imagenes/imagenes.qrc">
+      <normaloff>:/Iconos/Salir.png</normaloff>:/Iconos/Salir.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>20</width>
+      <height>16</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_fisica">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>120</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string>Persona Fisica</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButton_moral">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>120</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string>Persona Moral</string>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_datosPersonales">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>90</y>
+      <width>700</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Datos Personales ......................................................................................................................</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_paterno">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>170</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_paterno">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>150</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Apellido Paterno</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_materno">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>150</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Apellido Materno</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_materno">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>170</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_rfc">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>240</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_rfc">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>220</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>RFC</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_telefono">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>240</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_telefono">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>220</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Telefono (10 digitos)</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_celular">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>220</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Celular (10 digitos)</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_celular">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>240</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_correo">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>290</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Correo Eléctronico</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_correo">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>310</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_domicilioFiscal">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>380</y>
+      <width>700</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Domicilio Fiscal ......................................................................................................................</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_cp">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>500</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_calle">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>430</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_ext">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>410</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Número Exterior</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_int">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>430</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_cp">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>480</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Codigo Postal</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_colonia">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>480</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Colonia</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_calle">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>410</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Calle</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_ext">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>430</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_colonia">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>500</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_ciudad">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>550</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Ciudad</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_int">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>410</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Numero Interior</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_ciudad">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>570</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_localidad">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>480</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Localidad</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_localidad">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>500</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_estado">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>570</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_estado">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>550</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Estado</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="line_pais">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>570</y>
+      <width>200</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>México</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_pais">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>550</y>
+      <width>200</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Avenir</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>País</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../imagenes/imagenes.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -26,7 +26,7 @@
    <cursorShape>PointingHandCursor</cursorShape>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Salidas</string>
   </property>
   <property name="styleSheet">
    <string notr="true">.QWidget{
