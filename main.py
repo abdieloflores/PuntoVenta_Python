@@ -1223,7 +1223,7 @@ class entradas(QtWidgets.QWidget):
         self.bEliminar.clicked.connect(self.eliminar)
         self.bActualizar.clicked.connect(self.actualizar)
         
-        self.entradas,self.filas= self.consultarTodo()
+        self.entradas, self.filas = self.consultarTodo()
         self.crearTabla(self.filas,7,self.entradas)
     
     def crearTabla(self,filas,columnas,datos):
@@ -1248,15 +1248,16 @@ class entradas(QtWidgets.QWidget):
             conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
             try:
                 with conexion.cursor() as cursor:
-                    sentencia = "SELECT * FROM Entradas WHERE sal_estado = 1"
+                    sentencia = "SELECT * FROM Entradas WHERE ent_estado = 1"
                     cursor.execute(sentencia)
                     entradas = cursor.fetchall() 
             finally:
                 conexion.close()
         except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
             print("Ocurrió un error al conectar: ", e)
-        
-        return entradas,len(entradas)
+
+        return entradas, len(entradas)
+
     
     def nuevo(self):
         entrada=nuevaEntrada(self)
@@ -1272,8 +1273,8 @@ class entradas(QtWidgets.QWidget):
                 conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
                 try:
                     with conexion.cursor() as cursor:    
-                        cursor.execute("UPDATE Entradas SET sal_estado = '%s' WHERE ( sal_Id = '%s')" % (0,num))
-                        cursor.execute("UPDATE Productos SET prod_existencias=(prod_existencias+%s) WHERE prod_Id='%s'" % (cantidad,producto))
+                        cursor.execute("UPDATE Entradas SET ent_estado = '%s' WHERE ( ent_Id = '%s')" % (0,num))
+                        cursor.execute("UPDATE Productos SET prod_existencias=(prod_existencias-%s) WHERE prod_Id='%s'" % (cantidad,producto))
                     conexion.commit()
                 finally:
                     conexion.close()
@@ -1342,7 +1343,7 @@ class nuevaEntrada(QtWidgets.QMainWindow):
                 with conexion.cursor() as cursor:
                     cursor.execute("INSERT INTO Entradas (ent_IdAlma,ent_IdProd,ent_Cantidad,ent_Motivo,ent_FechaHora,ent_estado)"
                                     "VALUES ('%s','%s','%s','%s','%s','%s')" % (almacen,producto,cantidad,motivo,fechaHora,1))
-                    cursor.execute("UPDATE Productos SET prod_existencias=(prod_existencias-%s) WHERE prod_Id='%s'" % (cantidad,producto))
+                    cursor.execute("UPDATE Productos SET prod_existencias=(prod_existencias+%s) WHERE prod_Id='%s'" % (cantidad,producto))
                     conexion.commit()
             finally:
                 conexion.close()
