@@ -147,6 +147,7 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
         self.wConfiguracion = configuracion(self.body)
 
         self.refreshBody()
+        self.wInicio.show()
 
         self.bInicio.clicked.connect(self.abrirInicio)
         self.bVender.clicked.connect(self.abrirVender)
@@ -169,30 +170,37 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
 
     def abrirVender(self):
         self.refreshBody()
+        self.wVender.actualizar()
         self.wVender.show()
 
     def abrirProductos(self):
         self.refreshBody()
+        self.wProductos.actualizar()
         self.wProductos.show()
 
     def abrirClientes(self):
         self.refreshBody()
+        self.wClientes.actualizar()
         self.wClientes.show()
 
     def abrirAlmacenes(self):
         self.refreshBody()
+        self.wAlmacenes.actualizar()
         self.wAlmacenes.show()
 
     def abrirProveedores(self):
         self.refreshBody()
+        self.wProveedores.actualizar()
         self.wProveedores.show()
 
     def abrirSalidas(self):
         self.refreshBody()
+        self.wSalidas.actualizar()
         self.wSalidas.show()
 
     def abrirEntradas(self):
         self.refreshBody()
+        self.wEntradas.actualizar()
         self.wEntradas.show()
 
     def abrirReportes(self):
@@ -231,37 +239,164 @@ class vender(QtWidgets.QWidget):
         super(vender,self).__init__(parent)
         uic.loadUi('UI/vender.ui',self)
 
-        fecha = str(datetime.date.today())
-        self.line_fecha.setText(fecha)
+        self.tableList = []
+
+        self.line_Ccli.editingFinished.connect(self.buscarCliente)
+        self.line_Cbarras.editingFinished.connect(self.buscarProducto)
+        self.bAgregar.clicked.connect(self.agregar)
+        self.bGuardar.clicked.connect(self.guardar)
+        self.bEliminar.clicked.connect(self.eliminar)
+        self.bNueva.clicked.connect(self.actualizar)
+    
+    def buscarCliente(self):
         try:
             conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
             try:
                 with conexion.cursor() as cursor:
-                    cursor.execute("SELECT note_Id FROM Notas")
-                    notas = cursor.fetchall()
-                    cursor.execute("SELECT * FROM Clientes")
-                    clientes = cursor.fetchall()
-                    cursor.execute("SELECT * FROM Productos")
-                    productos = cursor.fetchall() 
+                    cursor.execute("SELECT * FROM Clientes WHERE cli_Id='%s'" % (self.line_Ccli.text()))
+                    self.clientes = cursor.fetchall() 
             finally:
                 conexion.close()
         except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
             print("Ocurrió un error al conectar: ", e)
-        if len(notas)==0:
-            self.line_folio.setText("1")
+        if len(self.clientes)==1:
+            self.line_cli.setText(self.clientes[0][2])
+            self.num = self.clientes[0][0]
         else:
-            num = str(notas[-1][0]+1)
-            self.line_folio.setText(num)
+            self.line_cli.setText("NO EXISTE")
 
-        nombres = []
-        prods = []
-        for i in range(len(clientes)):
-            nombres.append(clientes[i][2])
-        for i in range(len(productos)):
-            prods.append(productos[i][2])
-        self.comboBox_cliente.addItems(nombres)
-        self.comboBox_producto.addItems(prods)
+    def buscarProducto(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT * FROM Productos WHERE prod_CodBarras='%s'" % (self.line_Cbarras.text()))
+                    self.productos = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        if len(self.productos)==1:
+            self.line_producto.setText(self.productos[0][2])
+            self.num = self.productos[0][0]
+        else:
+            self.line_producto.setText("NO EXISTE")
+    
+    def crearTabla(self):
+        self.table_vender.clear()
+        filas = len(self.tableList)
+        self.table_vender.setRowCount(filas)
+        self.table_vender.setColumnCount(5)
+        self.table_vender.setHorizontalHeaderLabels(["COD","NOMBRE","PRECIO","CANT","TOTAL"])
+        self.header = self.table_vender.horizontalHeader()
+        self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        self.header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+        
+        for i in range (0,filas):
+            for j in range (1,6):
+                self.table_vender.setItem(i, j-1, QtWidgets.QTableWidgetItem(str(self.tableList[i][j])))
+        
+        self.total()
+    
+    def total(self):
+        self.line_total.clear()
+        suma = 0
+        for i in range (0,len(self.tableList)):
+            suma += self.tableList[i][5]
+        
+        self.line_total.setText("$"+str(suma))
 
+    def agregar(self):
+        if ((not self.line_producto.text()) or
+            (self.line_producto.text()=="NO EXISTE") or
+            (not self.line_Cbarras.text()) or
+            (not self.line_cantidad.text()) or
+            (int(self.line_cantidad.text())<=0)):
+            pass
+        else:
+            codigo = self.line_Cbarras.text()
+            cantidad = int(self.line_cantidad.text())
+            self.line_Cbarras.clear()
+            self.line_cantidad.clear()
+            self.line_producto.clear()
+            try:
+                conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+                try:
+                    with conexion.cursor() as cursor:
+                        cursor.execute("SELECT prod_Id,prod_CodBarras,prod_Nombre,prod_Precio,prod_IdAlmacen FROM PuntoVenta.Productos WHERE prod_CodBarras=%s" % (codigo))
+                        producto = cursor.fetchall() 
+                finally:
+                    conexion.close()
+            except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+                print("Ocurrió un error al conectar: ", e)
+            
+            productoLista = list(producto[0])
+            self.tableList.append(productoLista)
+            self.tableList[-1].insert(4,int(cantidad))
+            self.tableList[-1].insert(5,(self.tableList[-1][4]*self.tableList[-1][3]))
+            self.crearTabla()
+    
+    def guardar(self):
+        if ((not self.line_producto.text()) or
+            (self.line_producto.text()=="NO EXISTE") or
+            (not self.line_Cbarras.text()) or
+            (not self.line_cantidad.text()) or
+            (int(self.line_cantidad.text())<=0) or
+            (not self.line_Ccli.text()) or
+            (not self.line_cli.text()) or
+            (self.line_cli.text() == "NO EXISTE")):
+            pass
+        else:
+            print("PASO")
+
+    def eliminar(self):
+        if self.table_vender.currentRow() >= 0:
+            fila = self.table_vender.currentRow()
+            self.tableList.pop(fila)
+        
+        self.crearTabla() 
+
+    def actualizar(self):
+        self.line_Ccli.clear()
+        self.line_cli.clear()
+        self.line_Cbarras.clear()
+        self.line_producto.clear()
+        self.line_fecha.clear()
+        self.line_folio.clear()
+        self.table_vender.clear()
+
+        self.definirFecha()
+        self.definirFolio()
+        self.tableList.clear()
+        self.crearTabla()
+    
+    def definirFecha(self):
+        self.fechaHora = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.fecha = datetime.datetime.now().strftime("%Y-%m-%d")
+        self.line_fecha.setText(self.fecha)
+    
+    def definirFolio(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT * FROM Notas")
+                    notas = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        
+        if len(notas) == 0:
+            folio = 1
+            self.line_folio.setText("Nota - "+str(folio))
+        else:
+            folio = notas[-1][0]+1
+            self.line_folio.setText("Nota - "+str(folio))
+        
 class productos(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(productos,self).__init__(parent)

@@ -3,6 +3,8 @@
     <file>FondoLogin.png</file>
   </qresource>
   <qresource prefix="Iconos">
+    <file>buscar.png</file>
+    <file>Copiar.png</file>
     <file>Configuracion.png</file>
     <file>Inicio.png</file>
     <file>Productos.png</file>
