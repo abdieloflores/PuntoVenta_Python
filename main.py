@@ -287,7 +287,7 @@ class vender(QtWidgets.QWidget):
         filas = len(self.tableList)
         self.table_vender.setRowCount(filas)
         self.table_vender.setColumnCount(5)
-        self.table_vender.setHorizontalHeaderLabels(["COD","NOMBRE","PRECIO","CANT","TOTAL"])
+        self.table_vender.setHorizontalHeaderLabels(["CB","NOMBRE","P/U","C","$"])
         self.header = self.table_vender.horizontalHeader()
         self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
@@ -340,17 +340,20 @@ class vender(QtWidgets.QWidget):
             self.crearTabla()
     
     def guardar(self):
-        if ((not self.line_producto.text()) or
-            (self.line_producto.text()=="NO EXISTE") or
-            (not self.line_Cbarras.text()) or
-            (not self.line_cantidad.text()) or
-            (int(self.line_cantidad.text())<=0) or
-            (not self.line_Ccli.text()) or
+        if ((not self.line_Ccli.text()) or
             (not self.line_cli.text()) or
-            (self.line_cli.text() == "NO EXISTE")):
+            (self.line_cli.text() == "NO EXISTE") or
+            (len(self.tableList) == 0)):
             pass
         else:
-            print("PASO")
+            nota = []
+            nota.append(self.line_folio)
+            nota.append(self.line_Ccli)
+            
+
+            ventanaPagar=pagar(self)
+            ventanaPagar.setInfo(self.tableList,nota)
+            ventanaPagar.show()
 
     def eliminar(self):
         if self.table_vender.currentRow() >= 0:
@@ -396,7 +399,28 @@ class vender(QtWidgets.QWidget):
         else:
             folio = notas[-1][0]+1
             self.line_folio.setText("Nota - "+str(folio))
-        
+
+class pagar(QtWidgets.QWidget):
+    def __init__(self,parent=None):
+        super(pagar,self).__init__(parent)
+        uic.loadUi('UI/pagar.ui',self)
+        self.metodosPago = ["Efectivo","Tarjeta","Transferencia"]
+        self.datos = []
+        self.nota = []
+    
+    def llenarComboBox(self):
+        self.comboBox_metodosPago.addItems(self.metodosPago)
+    
+    def setInfo(self,datosSalidas,datosNota):
+        self.datos = datosSalidas
+        self.nota = datosNota
+    
+    def guardarNota(self):
+        pass
+
+    def guardarSalida(self):
+        pass
+
 class productos(QtWidgets.QWidget):
     def __init__(self,parent=None):
         super(productos,self).__init__(parent)
