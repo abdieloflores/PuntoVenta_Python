@@ -20,6 +20,8 @@ class login(QtWidgets.QMainWindow):
         self.bNuevo.clicked.connect(self.abrirNuevo)
         self.bRecordar.clicked.connect(self.abrirRecordar)
 
+        self.llenarComboBox()
+
     def clicIniciar(self):
         a = self.line_usuario.text()
         b = self.line_contrasena.text()
@@ -36,6 +38,7 @@ class login(QtWidgets.QMainWindow):
                         self.hide()
                         otraventana=ventanaPrincipal(self)
                         otraventana.setNombreHeader(vendedores[0][3].title())
+                        otraventana.setAlmacenVentas(self.almacenes[self.comboBox_almacenes.currentIndex()][0])
                         otraventana.show()
                     else: 
                         self.line_usuario.clear()
@@ -44,6 +47,23 @@ class login(QtWidgets.QMainWindow):
                 conexion.close()
         except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
             print("Ocurrió un error al conectar: ", e)
+    
+    def llenarComboBox(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT * FROM Almacenes")
+                    self.almacenes = cursor.fetchall() 
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        
+        self.listaAlmacenes = []
+        for i in range(0,len(self.almacenes)):
+            self.listaAlmacenes.append(self.almacenes[i][1])
+        self.comboBox_almacenes.addItems(self.listaAlmacenes)
 
     def abrirNuevo(self):
         self.line_usuario.clear()
@@ -146,6 +166,7 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
         self.wReportes = reportes(self.body)
         self.wConfiguracion = configuracion(self.body)
 
+        self.almacenVentas = None
         self.refreshBody()
         self.wInicio.show()
 
@@ -170,6 +191,7 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
 
     def abrirVender(self):
         self.refreshBody()
+        self.wVender.setAlmacenVentas(self.almacenVentas)
         self.wVender.actualizar()
         self.wVender.show()
 
@@ -223,6 +245,9 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
         self.wReportes.close()
         self.wConfiguracion.close()
 
+    def setAlmacenVentas(self,almacen):
+        self.almacenVentas = almacen
+
     def cerrar(self):
         self.wProductos.close()
         self.wVender.close()
@@ -240,6 +265,7 @@ class vender(QtWidgets.QWidget):
         uic.loadUi('UI/vender.ui',self)
 
         self.tableList = []
+        self.almacenVentas = None
 
         self.line_Ccli.editingFinished.connect(self.buscarCliente)
         self.line_Cbarras.editingFinished.connect(self.buscarProducto)
@@ -247,6 +273,9 @@ class vender(QtWidgets.QWidget):
         self.bGuardar.clicked.connect(self.guardar)
         self.bEliminar.clicked.connect(self.eliminar)
         self.bNueva.clicked.connect(self.actualizar)
+
+    def setAlmacenVentas(self,almacen):
+        self.almacenVentas = almacen
     
     def buscarCliente(self):
         try:
@@ -270,7 +299,7 @@ class vender(QtWidgets.QWidget):
             conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
             try:
                 with conexion.cursor() as cursor:
-                    cursor.execute("SELECT * FROM Productos WHERE prod_CodBarras='%s'" % (self.line_Cbarras.text()))
+                    cursor.execute("SELECT * FROM Productos WHERE prod_CodBarras='%s' and prod_IdAlmacen='%s'" % (self.line_Cbarras.text(),self.almacenVentas))
                     self.productos = cursor.fetchall() 
             finally:
                 conexion.close()
@@ -281,6 +310,8 @@ class vender(QtWidgets.QWidget):
             self.num = self.productos[0][0]
         else:
             self.line_producto.setText("NO EXISTE")
+    
+
     
     def crearTabla(self):
         self.table_vender.clear()
@@ -307,6 +338,7 @@ class vender(QtWidgets.QWidget):
         for i in range (0,len(self.tableList)):
             suma += self.tableList[i][5]
         
+        self.totalNota = suma
         self.line_total.setText("$"+str(suma))
 
     def agregar(self):
@@ -347,10 +379,11 @@ class vender(QtWidgets.QWidget):
             pass
         else:
             nota = []
-            nota.append(self.line_folio)
-            nota.append(self.line_Ccli)
-            
-
+            nota.append(self.line_folio.text())
+            nota.append(self.line_Ccli.text())
+            nota.append(self.almacenVentas)
+            nota.append(self.totalNota)
+            nota.append(self.fechaHora)
             ventanaPagar=pagar(self)
             ventanaPagar.setInfo(self.tableList,nota)
             ventanaPagar.show()
@@ -369,6 +402,7 @@ class vender(QtWidgets.QWidget):
         self.line_producto.clear()
         self.line_fecha.clear()
         self.line_folio.clear()
+        self.line_cantidad.clear()
         self.table_vender.clear()
 
         self.definirFecha()
@@ -400,26 +434,81 @@ class vender(QtWidgets.QWidget):
             folio = notas[-1][0]+1
             self.line_folio.setText("Nota - "+str(folio))
 
-class pagar(QtWidgets.QWidget):
+class pagar(QtWidgets.QMainWindow):
     def __init__(self,parent=None):
         super(pagar,self).__init__(parent)
         uic.loadUi('UI/pagar.ui',self)
+        self.bGuardar.clicked.connect(self.guardar)
+
         self.metodosPago = ["Efectivo","Tarjeta","Transferencia"]
         self.datos = []
         self.nota = []
+
+        self.llenarComboBox()
     
     def llenarComboBox(self):
         self.comboBox_metodosPago.addItems(self.metodosPago)
     
     def setInfo(self,datosSalidas,datosNota):
-        self.datos = datosSalidas
+        self.salidas = datosSalidas
         self.nota = datosNota
+        self.line_cantidadPagar.setText(str(self.nota[3]))
     
     def guardarNota(self):
-        pass
+        #Datos para salidas:  [[6, 123, 'BalanXC Supreme', 750.0, 2, 1500.0, 10]]
+        #Datos para nota:  ['Nota - 1', '1', 10, 1500.0, '2020-04-10 14:18:32']
+        codigo = self.nota[0]
+        cliente = self.nota[1]
+        almacen = self.nota[2]
+        total = self.nota[3]
+        formaPago = self.metodosPago[self.comboBox_metodosPago.currentIndex()]
+        fechaHora = self.nota[4]
+
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("INSERT INTO Notas (note_codigo,note_IdCli,note_IdAlma,note_Total,note_formaPago,note_FechaHora)"
+                                    "VALUES ('%s','%s','%s','%s','%s','%s')" % (codigo,cliente,almacen,total,formaPago,fechaHora))
+                    conexion.commit()
+            finally:
+                conexion.close()
+                self.cerrar()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
 
     def guardarSalida(self):
-        pass
+
+        for salida in self.salidas:
+            almacen = salida[6]
+            producto = salida[0]
+            cantidad = salida[4]
+            motivo = self.nota[0]
+            fechaHora = self.nota[4]
+            try:
+                conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+                try:
+                    with conexion.cursor() as cursor:
+                        cursor.execute("INSERT INTO Salidas (sal_IdAlma,sal_IdProd,sal_Cantidad,sal_Motivo,sal_FechaHora,sal_estado)"
+                                        "VALUES ('%s','%s','%s','%s','%s','%s')" % (almacen,producto,cantidad,motivo,fechaHora,1))
+                        cursor.execute("UPDATE Productos SET prod_existencias=(prod_existencias-%s) WHERE prod_Id='%s'" % (cantidad,producto))
+                        conexion.commit()
+                finally:
+                    conexion.close()
+                    self.cerrar()
+            except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+                print("Ocurrió un error al conectar: ", e)
+
+    def guardar(self):
+        if float(self.line_cantidadPagada.text()) == float(self.line_cantidadPagar.text()):
+            self.guardarNota()
+            self.guardarSalida()
+            self.cerrar()
+        else:
+            print("No paso")
+    
+    def cerrar(self):
+        self.close()
 
 class productos(QtWidgets.QWidget):
     def __init__(self,parent=None):

@@ -1,6 +1,6 @@
 <RCC>
   <qresource prefix="Backgrounds">
-    <file>FondoLogin.png</file>
+    <file>BackgroundLogin.png</file>
   </qresource>
   <qresource prefix="Iconos">
     <file>buscar.png</file>

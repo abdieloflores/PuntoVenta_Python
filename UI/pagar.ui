@@ -156,7 +156,10 @@ background-color: rgb(49, 50, 50);
      </font>
     </property>
     <property name="echoMode">
-     <enum>QLineEdit::Password</enum>
+     <enum>QLineEdit::Normal</enum>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_contrasena">
@@ -198,32 +201,6 @@ background-color: rgb(49, 50, 50);
     <property name="icon">
      <iconset resource="../imagenes/imagenes.qrc">
       <normaloff>:/Iconos/Guardar.png</normaloff>:/Iconos/Guardar.png</iconset>
-    </property>
-    <property name="iconSize">
-     <size>
-      <width>20</width>
-      <height>16</height>
-     </size>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="bSalir">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>250</y>
-      <width>113</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="text">
-     <string>Salir</string>
-    </property>
-    <property name="icon">
-     <iconset resource="../imagenes/imagenes.qrc">
-      <normaloff>:/Iconos/Salir.png</normaloff>:/Iconos/Salir.png</iconset>
     </property>
     <property name="iconSize">
      <size>
