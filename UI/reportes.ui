@@ -54,24 +54,24 @@
 	background-color: rgb(30,30,30);
 }</string>
   </property>
-  <widget class="QPushButton" name="bNuevo">
+  <widget class="QPushButton" name="bProductos">
    <property name="geometry">
     <rect>
-     <x>610</x>
-     <y>530</y>
-     <width>113</width>
-     <height>32</height>
+     <x>140</x>
+     <y>100</y>
+     <width>200</width>
+     <height>200</height>
     </rect>
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="text">
-    <string>Nuevo</string>
+    <string>Lista Productos</string>
    </property>
    <property name="icon">
     <iconset resource="../imagenes/imagenes.qrc">
-     <normaloff>:/Iconos/Nuevo.png</normaloff>:/Iconos/Nuevo.png</iconset>
+     <normaloff>:/Iconos/Productos.png</normaloff>:/Iconos/Productos.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -101,30 +101,30 @@
     </font>
    </property>
    <property name="text">
-    <string>CLIENTES</string>
+    <string>Reportes</string>
    </property>
    <property name="alignment">
     <set>Qt::AlignCenter</set>
    </property>
   </widget>
-  <widget class="QPushButton" name="bActualizar">
+  <widget class="QPushButton" name="bClientes">
    <property name="geometry">
     <rect>
-     <x>170</x>
-     <y>530</y>
-     <width>161</width>
-     <height>32</height>
+     <x>410</x>
+     <y>100</y>
+     <width>200</width>
+     <height>200</height>
     </rect>
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="text">
-    <string>Actualizar Tabla</string>
+    <string>Lista Clientes</string>
    </property>
    <property name="icon">
     <iconset resource="../imagenes/imagenes.qrc">
-     <normaloff>:/Iconos/Update.png</normaloff>:/Iconos/Update.png</iconset>
+     <normaloff>:/Iconos/Clientes.png</normaloff>:/Iconos/Clientes.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -133,24 +133,24 @@
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="bEditar">
+  <widget class="QPushButton" name="bProveedores">
    <property name="geometry">
     <rect>
-     <x>480</x>
-     <y>530</y>
-     <width>113</width>
-     <height>32</height>
+     <x>140</x>
+     <y>350</y>
+     <width>200</width>
+     <height>200</height>
     </rect>
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="text">
-    <string>Editar</string>
+    <string>Lista Proveedores</string>
    </property>
    <property name="icon">
     <iconset resource="../imagenes/imagenes.qrc">
-     <normaloff>:/Iconos/Editar.png</normaloff>:/Iconos/Editar.png</iconset>
+     <normaloff>:/Iconos/Clientes.png</normaloff>:/Iconos/Clientes.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -159,24 +159,24 @@
     </size>
    </property>
   </widget>
-  <widget class="QPushButton" name="bEliminar">
+  <widget class="QPushButton" name="bAlmacenes">
    <property name="geometry">
     <rect>
-     <x>350</x>
-     <y>530</y>
-     <width>113</width>
-     <height>32</height>
+     <x>410</x>
+     <y>350</y>
+     <width>200</width>
+     <height>200</height>
     </rect>
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
    <property name="text">
-    <string>Eliminar</string>
+    <string>Lista Almacenes</string>
    </property>
    <property name="icon">
     <iconset resource="../imagenes/imagenes.qrc">
-     <normaloff>:/Iconos/Eliminar.png</normaloff>:/Iconos/Eliminar.png</iconset>
+     <normaloff>:/Iconos/Almacenes.png</normaloff>:/Iconos/Almacenes.png</iconset>
    </property>
    <property name="iconSize">
     <size>
@@ -184,84 +184,6 @@
      <height>16</height>
     </size>
    </property>
-  </widget>
-  <widget class="QTableWidget" name="table_clientes">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>80</y>
-     <width>700</width>
-     <height>441</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Avenir</family>
-    </font>
-   </property>
-   <property name="lineWidth">
-    <number>0</number>
-   </property>
-   <property name="editTriggers">
-    <set>QAbstractItemView::NoEditTriggers</set>
-   </property>
-   <property name="alternatingRowColors">
-    <bool>true</bool>
-   </property>
-   <property name="selectionMode">
-    <enum>QAbstractItemView::SingleSelection</enum>
-   </property>
-   <property name="selectionBehavior">
-    <enum>QAbstractItemView::SelectRows</enum>
-   </property>
-   <property name="showGrid">
-    <bool>true</bool>
-   </property>
-   <property name="gridStyle">
-    <enum>Qt::DashLine</enum>
-   </property>
-   <property name="sortingEnabled">
-    <bool>false</bool>
-   </property>
-   <property name="wordWrap">
-    <bool>true</bool>
-   </property>
-   <property name="cornerButtonEnabled">
-    <bool>true</bool>
-   </property>
-   <property name="rowCount">
-    <number>0</number>
-   </property>
-   <property name="columnCount">
-    <number>0</number>
-   </property>
-   <attribute name="horizontalHeaderVisible">
-    <bool>true</bool>
-   </attribute>
-   <attribute name="horizontalHeaderCascadingSectionResizes">
-    <bool>true</bool>
-   </attribute>
-   <attribute name="horizontalHeaderDefaultSectionSize">
-    <number>150</number>
-   </attribute>
-   <attribute name="horizontalHeaderMinimumSectionSize">
-    <number>30</number>
-   </attribute>
-   <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-    <bool>false</bool>
-   </attribute>
-   <attribute name="horizontalHeaderStretchLastSection">
-    <bool>false</bool>
-   </attribute>
-   <attribute name="verticalHeaderVisible">
-    <bool>false</bool>
-   </attribute>
-   <attribute name="verticalHeaderDefaultSectionSize">
-    <number>30</number>
-   </attribute>
-   <attribute name="verticalHeaderShowSortIndicator" stdset="0">
-    <bool>false</bool>
-   </attribute>
   </widget>
  </widget>
  <resources>

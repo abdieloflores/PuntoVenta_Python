@@ -4,6 +4,14 @@ import pymysql
 import imagenes.imagenes
 import datetime
 from PyQt5 import QtWidgets,uic
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+#from reportlab.rl_config import defaultPageSize
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import Table
+from reportlab.platypus import TableStyle
+from reportlab.lib import colors
+from reportlab.lib.units import inch
 
 #Licencias Base de Datos
 _host='localhost'
@@ -155,7 +163,6 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
         super(ventanaPrincipal,self).__init__(parent)
         uic.loadUi('UI/mainWindow.ui',self)
 
-        self.wInicio = inicio(self.body)
         self.wVender = vender(self.body)
         self.wProductos = productos(self.body)
         self.wClientes = clientes(self.body)
@@ -164,13 +171,10 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
         self.wSalidas = salidas(self.body)
         self.wEntradas = entradas(self.body)
         self.wReportes = reportes(self.body)
-        self.wConfiguracion = configuracion(self.body)
 
         self.almacenVentas = None
         self.refreshBody()
-        self.wInicio.show()
 
-        self.bInicio.clicked.connect(self.abrirInicio)
         self.bVender.clicked.connect(self.abrirVender)
         self.bProductos.clicked.connect(self.abrirProductos)
         self.bClientes.clicked.connect(self.abrirClientes)
@@ -179,15 +183,10 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
         self.bSalidas.clicked.connect(self.abrirSalidas)
         self.bEntradas.clicked.connect(self.abrirEntradas)
         self.bReportes.clicked.connect(self.abrirReportes)
-        self.bConfiguracion.clicked.connect(self.abrirConfiguracion)
         self.bSalir.clicked.connect(self.cerrar)
 
     def setNombreHeader(self,nombre):
         self.label_header.setText("Bienvenido %s" % (nombre))
-
-    def abrirInicio(self):
-        self.refreshBody()
-        self.wInicio.show()
 
     def abrirVender(self):
         self.refreshBody()
@@ -229,12 +228,7 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
         self.refreshBody()
         self.wReportes.show()
 
-    def abrirConfiguracion(self):
-        self.refreshBody()
-        self.wConfiguracion.show()
-
     def refreshBody(self):
-        self.wInicio.close()
         self.wVender.close()
         self.wProductos.close()
         self.wClientes.close()
@@ -243,7 +237,6 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
         self.wSalidas.close()
         self.wEntradas.close()
         self.wReportes.close()
-        self.wConfiguracion.close()
 
     def setAlmacenVentas(self,almacen):
         self.almacenVentas = almacen
@@ -253,11 +246,6 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
         self.wVender.close()
         self.parent().show()
         self.close()
-
-class inicio(QtWidgets.QWidget):
-    def __init__(self,parent=None):
-        super(inicio,self).__init__(parent)
-        uic.loadUi('UI/inicio.ui',self)
 
 class vender(QtWidgets.QWidget):
     def __init__(self,parent=None):
@@ -441,7 +429,6 @@ class pagar(QtWidgets.QMainWindow):
         self.bGuardar.clicked.connect(self.guardar)
 
         self.metodosPago = ["Efectivo","Tarjeta","Transferencia"]
-        self.datos = []
         self.nota = []
 
         self.llenarComboBox()
@@ -503,6 +490,8 @@ class pagar(QtWidgets.QMainWindow):
         if float(self.line_cantidadPagada.text()) == float(self.line_cantidadPagar.text()):
             self.guardarNota()
             self.guardarSalida()
+            pdf = notaPdf(self.nota,self.salidas)
+            pdf.go()
             self.cerrar()
         else:
             print("No paso")
@@ -1607,10 +1596,308 @@ class reportes(QtWidgets.QWidget):
         super(reportes,self).__init__(parent)
         uic.loadUi('UI/reportes.ui',self)
 
-class configuracion(QtWidgets.QWidget):
-    def __init__(self,parent=None):
-        super(configuracion,self).__init__(parent)
-        uic.loadUi('UI/configuracion.ui',self)
+        self.bProductos.clicked.connect(self.reporteProductos)
+        self.bClientes.clicked.connect(self.reporteClientes)
+        self.bProveedores.clicked.connect(self.reporteProveedores)
+        self.bAlmacenes.clicked.connect(self.reporteAlmacenes)
+
+    def reporteProductos(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT prod_Id,prod_CodBarras,prod_Nombre,prod_existencias,prod_Costo,prod_Precio FROM Productos")
+                    productos = cursor.fetchall()
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+        
+        productos2=list(productos)
+        productos2.insert(0,("ID","CODIGO","NOMBRE","EXISTENCIAS","COSTO","PRECIO"))
+        reporte1 = reporte("ProductsReport","Listado de Productos",productos2)
+        reporte1.go()
+        del reporte1
+
+    def reporteClientes(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT cli_Id,cli_Nombres,cli_Paterno,cli_Materno,cli_RFC,cli_Ciudad,cli_Estado,cli_Pais FROM Clientes")
+                    clientes = cursor.fetchall()
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+            
+        clientes2=list(clientes)
+        clientes2.insert(0,("ID","NOMBRES","PATERNO","MATERNO","RFC","CIUDAD","ESTADO","PAIS"))
+        reporte1 = reporte("ClientsReport","Listado de Clientes",clientes2)
+        reporte1.go()
+        del reporte1
+
+    def reporteProveedores(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT prov_Id,prov_Nombres,prov_Paterno,prov_Materno,prov_RFC,prov_Ciudad,prov_Estado,prov_Pais FROM Proveedores")
+                    proveedores = cursor.fetchall()
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+            
+        proveedores2=list(proveedores)
+        proveedores2.insert(0,("ID","NOMBRES","PATERNO","MATERNO","RFC","CIUDAD","ESTADO","PAIS"))
+        reporte1 = reporte("ProvidersReport","Listado de Proveedores",proveedores2)
+        reporte1.go()
+        del reporte1
+
+    def reporteAlmacenes(self):
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT * FROM Almacenes")
+                    almacenes = cursor.fetchall()
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+            
+        almacenes2=list(almacenes)
+        almacenes2.insert(0,("ID","NOMBRE"))
+        reporte1 = reporte("WarehousesReport","Listado de Almacenes",almacenes2)
+        reporte1.go()
+        del reporte1
+    
+class reporte():
+    def __init__(self,nombreReporte,titulo,datos):
+        self.PAGE_HEIGHT=letter[1]; self.PAGE_WIDTH=letter[0]
+        self.pageinfo = " |  StoreSoft"
+        self.datos = datos
+        self.titutlo = titulo
+        self.nombreReporte = nombreReporte
+
+    def myFirstPage(self, canvas, doc):
+        canvas.saveState()
+        #Cabecera ------------------------------------
+        canvas.setFillColorRGB(.6588,0,.0627)
+        canvas.rect(0,self.PAGE_HEIGHT+30,self.PAGE_WIDTH, 20,fill=True,stroke=False)
+        #Fin de cabecera ---------------------------------
+        #Pie de pagina -----------------------------------
+        canvas.setFillColorRGB(.2196,.2196,.2196)
+        canvas.setFont('Helvetica-Bold',20)
+        canvas.drawCentredString(self.PAGE_WIDTH/2, 700, "%s" % (self.titutlo))
+        canvas.setFont('Helvetica',9)
+        canvas.drawCentredString(self.PAGE_WIDTH/2, 50, "Página %d %s" % (doc.page, self.pageinfo))
+        canvas.setFillColorRGB(.6588,0,.0627)
+        canvas.rect(0,0,self.PAGE_WIDTH, 20,fill=True,stroke=False)
+        #-------------------------------------------------
+        canvas.restoreState()
+
+    def myLaterPages(self, canvas, doc):
+        canvas.saveState()
+        #Cabecera ------------------------------------
+        canvas.setFillColorRGB(.6588,0,.0627)
+        canvas.rect(0,self.PAGE_HEIGHT+30,self.PAGE_WIDTH, 20,fill=True,stroke=False)
+        #Fin de cabecera ---------------------------------
+        #Pie de pagina -----------------------------------
+        canvas.setFillColorRGB(.2196,.2196,.2196)
+        canvas.setFont('Helvetica',9)
+        canvas.drawCentredString(self.PAGE_WIDTH/2, 50, "Página %d %s" % (doc.page, self.pageinfo))
+        canvas.setFillColorRGB(.6588,0,.0627)
+        canvas.rect(0,0,self.PAGE_WIDTH, 20,fill=True,stroke=False)
+        #-------------------------------------------------
+        canvas.restoreState()
+    
+    def hacerTabla(self):
+        tabla = Table(self.datos)
+        tabla.setStyle(TableStyle([ 
+            ('FONT',(0,0),(-1,0),'Helvetica-Bold'),
+            ('BACKGROUND',(0,0),(-1,0),(.6588,0,.0627)),
+            ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+            ('ALIGN',(0,0),(-1,0),'CENTER'),
+            ('TEXTCOLOR',(0,1),(-1,-1),(.2196,.2196,.2196))]))
+        
+        for i in range(1, len(self.datos)):
+            if i % 2 == 0:
+                bc = (.80,.80,.80)
+            else:
+                bc = colors.white
+        
+            ts = TableStyle(
+                [('BACKGROUND',(0,i),(-1,i),bc)]
+                )
+            tabla.setStyle(ts)
+        return tabla
+    
+    def go(self):
+        doc = SimpleDocTemplate("ReportesPdf/%s" % (self.nombreReporte))
+        Story = [Spacer(1,150)]
+        tabla = self.hacerTabla()
+        Story.append(tabla)
+        doc.build(Story, onFirstPage=self.myFirstPage, onLaterPages=self.myLaterPages)
+
+class notaPdf:
+    
+    def __init__(self,nota, salidas):
+        self.PAGE_HEIGHT=letter[1]; self.PAGE_WIDTH=letter[0]
+        self.pageinfo = " |  StoreSoft"
+        self.nota = nota
+        self.salidas = salidas
+
+    def myFirstPage(self,canvas, doc):
+        canvas
+        canvas.saveState()
+        #Cabecera ------------------------------------
+        nombre = "TIENDA DON LUIS"
+        rfc = "XXXX010101"
+        calle ="Av. Plan de San Luis"
+        ext ="1820"
+        inte = " "
+        col = "Chapultepec Country"
+        cp = "44620"
+        ciudad = "Guadalajara"
+        estado = "Jalisco"
+        pais = "México"
+        canvas.setStrokeColorRGB(.6588,0,.0627)
+        canvas.setFillColorRGB(.6588,0,.0627)
+        canvas.rect(0,self.PAGE_HEIGHT-70,self.PAGE_WIDTH, 120,fill=True,stroke=False)
+
+        canvas.drawImage("imagenes/logoNota.png", self.PAGE_WIDTH-170, self.PAGE_HEIGHT-40, width=120, height=60)
+
+        canvas.setFillColorRGB(1,1,1)
+        canvas.setFont("Helvetica", 12)
+        cabecera = canvas.beginText(50, self.PAGE_HEIGHT+10)
+        cabecera.textLines("%s\n%s\nAv. %s No.%s Int.%s\nCol. %s, C.P. %s\n%s, %s, %s." % (nombre, rfc, calle, ext, inte, col, cp, ciudad, estado, pais))
+        canvas.drawText(cabecera)
+        #Fin de cabecera ---------------------------------
+        #Info Cliente ------------------------------------
+        try:
+            conexion = pymysql.connect(host=_host,user=_user,password=_password,db=_db)
+            try:
+                with conexion.cursor() as cursor:
+                    cursor.execute("SELECT * FROM Clientes WHERE cli_Id='%s'" % (self.nota[1]))
+                    cliente = cursor.fetchall()
+                    if len(cliente)==1:
+                        nombre = cliente[0][2]+cliente[0][3]+cliente[0][4]
+                        rfc = cliente[0][5]
+                        calle = cliente[0][6]
+                        ext =cliente[0][7]
+                        inte = cliente[0][8]
+                        col = cliente[0][10]
+                        cp = cliente[0][9]
+                        ciudad = cliente[0][12]
+                        estado = cliente[0][3]
+                        pais = cliente[0][14]
+                    else:
+                        nombre = "N/A"
+                        rfc = "N/A"
+                        calle = "N/A"
+                        ext = "N/A"
+                        inte = "N/A"
+                        col = "N/A"
+                        cp = "N/A"
+                        ciudad = "N/A"
+                        estado = "N/A"
+                        pais = "N/A"
+            finally:
+                conexion.close()
+        except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+            print("Ocurrió un error al conectar: ", e)
+
+        codigoNota = self.nota[0]
+        fechaHora = self.nota[4]
+        canvas.setFillColorRGB(.2196,.2196,.2196)
+        canvas.setFont("Helvetica", 12)
+        cliente = canvas.beginText(50, 630+70)
+        cliente.textLines("%s\n%s\nAv. %s No.%s Int.%s\nCol. %s, C.P. %s\n%s, %s, %s." % (nombre, rfc, calle, ext, inte, col, cp, ciudad, estado, pais))
+        canvas.drawText(cliente)
+
+        canvas.setFillColorRGB(.6588,0,.0627)
+        canvas.setFont("Helvetica-Bold", 15)
+        canvas.drawRightString(self.PAGE_WIDTH-50,630+70,"%s" %(codigoNota))
+        canvas.setFillColorRGB(.2196,.2196,.2196)
+        canvas.setFont("Helvetica-Bold", 12)
+        canvas.drawRightString(self.PAGE_WIDTH-50,590+70,"Fecha y Hora:")
+        canvas.setFont("Helvetica", 12)
+        canvas.drawRightString(self.PAGE_WIDTH-50,575+70,"%s" % (fechaHora))
+        #-------------------------------------------------
+        #Pie de pagina -----------------------------------
+        canvas.setFont('Helvetica',9)
+        canvas.drawCentredString(self.PAGE_WIDTH/2, 50, "Página %d %s" % (doc.page, self.pageinfo))
+        canvas.setFillColorRGB(.6588,0,.0627)
+        canvas.rect(0,0,self.PAGE_WIDTH, 20,fill=True,stroke=False)
+        #-------------------------------------------------
+        canvas.restoreState()
+
+    def myLaterPages(self, canvas, doc):
+        canvas.saveState()
+        #Cabecera ------------------------------------
+        canvas.setFillColorRGB(.6588,0,.0627)
+        canvas.rect(0,self.PAGE_HEIGHT+30,self.PAGE_WIDTH, 20,fill=True,stroke=False)
+        #Fin de cabecera ---------------------------------
+        #Pie de pagina -----------------------------------
+        canvas.setFillColorRGB(.2196,.2196,.2196)
+        canvas.setFont('Helvetica',9)
+        canvas.drawCentredString(self.PAGE_WIDTH/2, 50, "Página %d %s" % (doc.page, self.pageinfo))
+        canvas.setFillColorRGB(.6588,0,.0627)
+        canvas.rect(0,0,self.PAGE_WIDTH, 20,fill=True,stroke=False)
+        #-------------------------------------------------
+        canvas.restoreState()
+
+    def hacerTabla(self):
+            #Datos para salidas:  [[6, 123, 'BalanXC Supreme', 750.0, 2, 1500.0, 10]]
+            #Datos para nota:  ['Nota - 1', '1', 10, 1500.0, '2020-04-10 14:18:32']
+        salida = []
+        datos = [["CANTIDAD","                       NOMBRE                       ","  P/U  ","TOTAL"]]
+        for i in range(0,len(self.salidas)):
+            salida.append(self.salidas[i][4])
+            salida.append(self.salidas[i][2])
+            salida.append(self.salidas[i][3])
+            salida.append(self.salidas[i][5])
+            datos.append(salida)
+            salida=[]
+        total = [" "," ","TOTAL:",str(self.nota[3])]
+        datos.append(total)
+
+        tabla = Table(datos)
+        tabla.setStyle(TableStyle([ 
+            ('VALIGN',(0,0),(-1,-1),'MIDDLE'),
+            ('FONT',(0,0),(-1,0),'Helvetica-Bold'),
+            ('BACKGROUND',(0,0),(-1,0),(.6588,0,.0627)),
+            ('TEXTCOLOR',(0,0),(-1,0),colors.white),
+            ('FONT',(2,-1),(-1,-1),'Helvetica-Bold'),
+            ('BACKGROUND',(2,-1),(-1,-1),(.6588,0,.0627)),
+            ('TEXTCOLOR',(2,-1),(-1,-1),colors.white),
+            ('TEXTCOLOR',(0,1),(-2,-2),(.2196,.2196,.2196)),
+            ('ALIGN',(0,0),(-1,0),'CENTER'),
+            ('ALIGN',(0,1),(1,-2),'CENTER'),
+            ('ALIGN',(2,1),(3,-1),'RIGHT'),]))
+        
+        for i in range(1, len(datos)-1):
+            if i % 2 == 0:
+                bc = (.80,.80,.80)
+            else:
+                bc = colors.white
+        
+            ts = TableStyle(
+                [('BACKGROUND',(0,i),(-1,i),bc)]
+                )
+            tabla.setStyle(ts)
+        return tabla
+
+    def go(self):
+        doc = SimpleDocTemplate("NotasDeVentaPdf/%s" % (self.nota[0]))
+        Story = [Spacer(1,150)]
+        tabla = self.hacerTabla()
+        Story.append(tabla)
+        doc.build(Story, onFirstPage=self.myFirstPage, onLaterPages=self.myLaterPages)
+
 
 app = QtWidgets.QApplication(sys.argv)
 window = login()

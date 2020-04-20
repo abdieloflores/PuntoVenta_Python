@@ -120,7 +120,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>480</y>
+       <y>440</y>
        <width>150</width>
        <height>49</height>
       </rect>
@@ -145,7 +145,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>430</y>
+       <y>390</y>
        <width>150</width>
        <height>49</height>
       </rect>
@@ -170,7 +170,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>330</y>
+       <y>290</y>
        <width>150</width>
        <height>49</height>
       </rect>
@@ -195,7 +195,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>280</y>
+       <y>240</y>
        <width>150</width>
        <height>49</height>
       </rect>
@@ -220,7 +220,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>230</y>
+       <y>190</y>
        <width>150</width>
        <height>49</height>
       </rect>
@@ -251,7 +251,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>180</y>
+       <y>140</y>
        <width>150</width>
        <height>49</height>
       </rect>
@@ -323,7 +323,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>380</y>
+       <y>340</y>
        <width>150</width>
        <height>49</height>
       </rect>
@@ -344,61 +344,11 @@
        <normaloff>:/Iconos/Clientes.png</normaloff>:/Iconos/Clientes.png</iconset>
      </property>
     </widget>
-    <widget class="QPushButton" name="bInicio">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>130</y>
-       <width>150</width>
-       <height>49</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Avenir</family>
-      </font>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="text">
-      <string>Inicio</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../imagenes/imagenes.qrc">
-       <normaloff>:/Iconos/Inicio.png</normaloff>:/Iconos/Inicio.png</iconset>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="bConfiguracion">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>580</y>
-       <width>150</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Avenir</family>
-      </font>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="text">
-      <string>Configuración</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../imagenes/imagenes.qrc">
-       <normaloff>:/Iconos/Configuracion.png</normaloff>:/Iconos/Configuracion.png</iconset>
-     </property>
-    </widget>
     <widget class="QPushButton" name="bReportes">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>530</y>
+       <y>490</y>
        <width>150</width>
        <height>49</height>
       </rect>
