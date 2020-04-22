@@ -163,7 +163,7 @@ class ventanaPrincipal(QtWidgets.QMainWindow):
         super(ventanaPrincipal,self).__init__(parent)
         uic.loadUi('UI/mainWindow.ui',self)
 
-        self.SS = vender(self.body)
+        self.wVender = vender(self.body)
         self.wProductos = productos(self.body)
         self.wClientes = clientes(self.body)
         self.wAlmacenes = almacenes(self.body)
